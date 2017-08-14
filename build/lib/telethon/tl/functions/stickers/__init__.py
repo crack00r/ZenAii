@@ -1,0 +1,4 @@
+from .create_sticker_set import CreateStickerSetRequest
+from .remove_sticker_from_set import RemoveStickerFromSetRequest
+from .change_sticker_position import ChangeStickerPositionRequest
+from .add_sticker_to_set import AddStickerToSetRequest
