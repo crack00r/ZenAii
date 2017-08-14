@@ -38,6 +38,11 @@ def generate_random_long():
     import random
     return random.choice(range(0,10000000))
 
+
+
+
+
+
 def diff():
     global variable
     global flag
@@ -52,11 +57,21 @@ def diff():
     subprocess.call(process,shell=True)
     ('Done Trading')
 
+
+
+
+
+
+
+
+
+
 def update_handler(d):
     global flag
     global variable
     # On this example, we just show the update object itself
     d = str(d)
+    print(d)
     #testChannel
     re1 = '( id: )(?:[0-9][0-9]+)(,)' 
 
@@ -98,4 +113,3 @@ client.add_update_handler(update_handler)
 
 input('Press <ENTER> to exit...')
 client.disconnect()
-
