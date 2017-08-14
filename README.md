@@ -61,107 +61,15 @@ Run these commands in the /zenbot/ directory.
 sudo npm install
 sudo npm link
 ```
-### 8. Install Proxy: Warning: it sometimes crashes, needs debugging but auto-restarts on fail.
-1. git clone polproxy:
+### 8. Install Telethon
 ```
-cd /zenbot/
-sudo git clone https://github.com/TheRoboKitten/polproxy.git
-cd /polproxy
+sudo ./setup.sh
 ```
-2. Input a second API key and secret into settings.yml
+or
 ```
-sudo nano settings.yml
+sudo python3 setup.py gen_tl
+sudo python3 setup.py install
 ```
-```
-# Your poloniex.com api key and secret.
-api_key: API KEY HERE 
-api_secret: API SECRET HERE
-```
-3. edit /etc/hosts
-```
-sudo nano /etc/hosts
-```
-and add the line:
-```
-127.0.0.1 poloniex.com
-```
-4. Add polproxy service:
-``` 
-sudo nano /etc/systemd/system/polproxy.service
-```
-5. Input into polproxy.service:
-```
-[Unit]
-Description=PolProxy
-
-[Service]
-ExecStart=/usr/bin/python /zenbot/polproxy/polproxy.py
-Restart=always
-
-[Install]
-WantedBy=multi-user.target
-```
-6. Save and set permissions on polproxy.service:
-```
-sudo chmod 644 /etc/systemd/system/polproxy.service
-```
-7. Reload the systemctl daemon.
-```
-sudo systemctl daemon-reload
-```
-8. Run polproxy
-```
-sudo service polproxy start
-sudo service polproxy status
-```
-
-
-### 9. Final touches:
-
-#### 1. Edit /zenbot/node_modules/poloniex.js/lib/poloniex.js and change the line:
-THIS STEP IS MANDATORY FOR THE PROXY TO WORK
-```
-Poloniex.STRICT_SSL = true;
-```
-to
-```
-Poloniex.STRICT_SSL = false;
-```
-
-#### 2. Run zenbot once against a single coin to check for errors as follows in the zenbot directory:
-
-```
-sudo ./zenbot.sh trade --strategy=speed --period=1m poloniex.ETH-BTC
-```
-
-#### 3. Run the start.sh script as follows, this will take approx 60s * coins on poloniex. It will download trade data, and can overlap as all output is on one window at the moment. 60s is given for time to download the trade data. It will reinstall mongodb to assure the program starts.
-
-```
-sudo chmod +x /zenbot/start.sh
-cd /zenbot/ && sudo ./start.sh
-```
-
-#### 4. If all is well, reboot and check that node and ./zenbot.sh is starting. (this can take awhile) and check polproxy service for incoming requests.
-
-(if something is missing when running zenbot, such as a component, just do npm install (component) in the /zenbot/ directory.
-(if a python module is missing, run pip install (module))
-
-Thanks!!!!!
-### Please report any issues as a issue on github for me to take a look at.
-
-## Donate to carlos!!!!! He's a great guy. It's his software, this is just a fork.
-
-P.S., some have asked for how to donate to Zenbot development. I accept donations at **my Bitcoin address** Here:
-
-### carlos8f's BTC
-
-`187rmNSkSvehgcKpBunre6a5wA5hQQop6W`
-
-![zenbot logo](https://rawgit.com/carlos8f/zenbot/master/assets/zenbot_square.png)
-
-Thanks!
-
-- - -
 
 ### License: MIT
 
