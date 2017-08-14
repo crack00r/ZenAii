@@ -51,11 +51,17 @@ def diff():
     variable=str(variable)
     variablestr=str(variable)
     process = './zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + flagstr
-    subprocess.call(process,shell=True)
+    try:
+        subprocess.call(process,shell=True)
+    except Exception as e:
+        print(e)
     print('Starting Buy Of:' + variablestr)
     process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr			
-    subprocess.call(process,shell=True)
-    ('Done Trading')
+    try:
+        subprocess.call(process,shell=True)
+    except Exception as e:
+        print(e)
+    print('Done Trading')
 
 
 
