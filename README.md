@@ -18,13 +18,13 @@ Zenbot has a Discord chat again! You can get in [through this invite link](https
 ```
 cd /
 sudo apt install git
-sudo git clone https://github.com/TheRoboKitten/zenbot.git /zenbot
+sudo git clone https://github.com/TheRoboKitten/ZenAii.git /zenaii
 ```
 
 ### 3. Change directory to zenbot:
 
 ```
-cd /zenbot/
+cd zenaii/
 ```
 
 ### 4. Install dependencies:
@@ -61,6 +61,10 @@ or
 sudo python3 setup.py gen_tl
 sudo python3 setup.py install
 ```
+
+Open setup.sh for more instructions please!!! This will guide you the way.
+
+
 
 ### License: MIT
 
