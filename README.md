@@ -39,29 +39,20 @@ sudo pip install pyparse
 sudo pip install parse
 ```
 
-### 5. Install cron job on system start and save:
-```
-sudo crontab -u root -e
-```
-Select the editor of your choice and input:
-```
-@reboot cd /zenbot/ && sudo ./start.sh
-```
-
-### 6. Edit conf-sample.js
+### 5. Edit conf-sample.js
 The main line you want to input is here is your poloniex API key and Secret.
 Lines 29 and 30:
 ```
 c.poloniex.key = 'YOUR-API-KEY'
 c.poloniex.secret = 'YOUR-SECRET'
 ```
-### 7. Install node dependencies
+### 6. Install node dependencies
 Run these commands in the /zenbot/ directory.
 ```
 sudo npm install
 sudo npm link
 ```
-### 8. Install Telethon
+### 7. Install Telethon
 ```
 sudo ./setup.sh
 ```
