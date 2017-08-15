@@ -24,7 +24,7 @@ sudo git clone https://github.com/TheRoboKitten/ZenAii.git /zenaii
 ### 3. Change directory to zenbot:
 
 ```
-cd zenaii/
+cd /zenaii
 ```
 
 ### 4. Install dependencies:
@@ -47,7 +47,7 @@ c.poloniex.key = 'YOUR-API-KEY'
 c.poloniex.secret = 'YOUR-SECRET'
 ```
 ### 6. Install node dependencies
-Run these commands in the /zenbot/ directory.
+Run these commands in the /zenaii directory.
 ```
 sudo npm install
 sudo npm link
@@ -61,6 +61,7 @@ or
 sudo python3 setup.py gen_tl
 sudo python3 setup.py install
 ```
+Then open setup.sh for instructions to set up trader.py with your telegram API key (best if you use a new/empty telegram)
 
 Open setup.sh for more instructions please!!! This will guide you the way.
 
