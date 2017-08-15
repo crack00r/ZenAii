@@ -20,8 +20,18 @@ from decimal import *
 import threading
 global flag
 global variable
-flag = []
-variable = []
+
+print('Cryptoping Auto-Trader, with live updates...')
+print('Cryptoping Auto-Trader, with live updates...')
+print('Cryptoping Auto-Trader, with live updates...')
+print('CTRL-C To exit')
+print('CTRL-C To exit')
+print('CTRL-C To exit')
+
+
+threads = []
+flag = "test"
+variable = "test"
 api_id = 189914
 api_hash = '75b1fbdede4c49f7b7ca4a8681d5dfdf'
 # 'session_id' can be 'your_name'. It'll be saved as your_name.session
@@ -41,47 +51,11 @@ def generate_random_long():
 
 
 
-
-
-def diff():
-    global variable
-    global flag
-    flagstr = str(flag)
-    print('Started Selling:' + flagstr)
-    variable=str(variable)
-    variablestr=str(variable)
-    process = './zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + flagstr
-    try:
-        #Timeout to give polo time to update
-        time.sleep(5)
-        subprocess.call(process,shell=True)
-    except Exception as e:
-        print(e)
-    print('Starting Buy Of:' + variablestr)
-    process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr			
-    try:
-        #Timeout to give polo time to update
-        time.sleep(5)
-        subprocess.call(process,shell=True)
-    except Exception as e:
-        print(e)
-    print('Done Trading')
-
-
-
-
-
-
-
-
-
-
 def update_handler(d):
     global flag
     global variable
     # On this example, we just show the update object itself
     d = str(d)
-    print(d)
     #testChannel
     re1 = '( id: )(?:[0-9][0-9]+)(,)' 
 
@@ -110,16 +84,39 @@ def update_handler(d):
                     btc = '-BTC'
                     variable = var1 + btc
                     client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
-                    diff()
-                    flag = variable
-
                 except Exception as e:
                     print(e)
 
 # From now on, any update received will be passed to 'update_handler'
-client.add_update_handler(update_handler) 
+client.add_update_handler(update_handler)
+
+while True:
+    global variable
+    global flag
+    if flag == variable:
+            null = "null"
+    else:
+        flagstr = str(flag)
+        print('Started Selling:' + flagstr)
+        process = './zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + flagstr
+        try:
+            #Timeout to give polo time to update
+            subprocess.call(process,shell=True)
+        except Exception as e:
+            print(e)
+        variable=str(variable)
+        variablestr=str(variable)
+        print('Starting Buy Of:' + variablestr)
+        process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr			
+        try:
+            #Timeout to give polo time to update
+            time.sleep(10)
+            subprocess.call(process,shell=True)
+        except Exception as e:
+            print(e)
+        print('Done Trading')
+        flag = variable
 
 
 
-input('Press <ENTER> to exit...')
-client.disconnect()
+
