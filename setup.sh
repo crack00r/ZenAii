@@ -3,7 +3,7 @@ echo "First, Create a telegram account..."
 echo "...And Then... Go here and get an API key and hash under Dev Tools: https://my.telegram.org/auth"
 
 sudo apt install -y build-essential
-sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 sudo apt-get install -y nodejs nodejs-legacy mongodb
 sudo npm install
 sudo npm link
