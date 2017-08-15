@@ -30,13 +30,13 @@ cd zenaii/
 ### 4. Install dependencies:
 ```
 sudo apt update
-sudo apt install python-setuptools python-dev build-essential python mongodb libcurl4-openssl-dev libssl-dev dialog jq curl
+sudo apt install python-setuptools python3 python3-pip mongodb libcurl4-openssl-dev libssl-dev dialog jq curl
 sudo curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-sudo apt-get install -y nodejs
-sudo pip install pycurl
-sudo pip install pyyaml
-sudo pip install pyparse
-sudo pip install parse
+sudo apt-get install -y nodejs nodejs-legacy
+sudo pip3 install pycurl
+sudo pip3 install pyyaml
+sudo pip3 install pyparse
+sudo pip3 install parse
 ```
 
 ### 5. Edit conf-sample.js
