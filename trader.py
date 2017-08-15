@@ -91,7 +91,6 @@ def update_handler(d):
 client.add_update_handler(update_handler)
 
 while True:
-    global flag
     if flag == variable:
             null = "null"
     else:
@@ -103,18 +102,18 @@ while True:
         except Exception as e:
             print(e)		
         try:
+            time.sleep(5)
             global variable
             variable=str(variable)
             variablestr=str(variable)
             print('Starting Buy Of:' + variablestr)
             process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
-            #Timeout to give polo time to update
-            time.sleep(10)
+            flag = variable
             subprocess.call(process,shell=True)
         except Exception as e:
             print(e)
-        print('Done Trading')
-        flag = variable
+        time.sleep(5)
+        
 
 
 
