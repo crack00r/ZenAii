@@ -65,7 +65,13 @@ Then open setup.sh for instructions to set up trader.py with your telegram API k
 
 Open setup.sh for more instructions please!!! This will guide you the way.
 
+###NOTE:
+### Sometimes code wont see messages
 
+#### To check, type anything but a pair into your telegram window. You should see a message ID (about in range of 1-10000)
+
+
+#### This does not work on supergroups, and if you are in a group or supergroup, someone can control your bot or the trader will crash!!!!!
 
 ### License: MIT
 
