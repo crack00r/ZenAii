@@ -95,8 +95,8 @@ c.order_adjust_time = 20000
 c.max_sell_loss_pct = 25
 // ms to poll order status
 c.order_poll_time = 10000
-// ms to wait for settlement (after an order cancel)
-c.wait_for_settlement = 10000
+// ms to wait for settlement (after an order cancel) This is relatively important.
+c.wait_for_settlement = 15000
 // % to mark up or down price for orders
 c.markup_pct = 0
 // become a market taker (high fees) or a market maker (low fees)
