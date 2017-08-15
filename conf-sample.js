@@ -89,12 +89,13 @@ c.max_slippage_pct = 5
 c.buy_pct = 100
 // sell with this % of asset balance (WARNING : sim won't work properly if you set this value to 100)
 c.sell_pct = 100
-// ms to adjust non-filled order after (This might need debugging)
-c.order_adjust_time = 20000
+// ms to adjust non-filled order after
+// ADJUST THE OPTIONS BELOW AT YOUR OWN RISK (which means, be very careful!)
+c.order_adjust_time = 30000
 // avoid selling at a loss below this pct
 c.max_sell_loss_pct = 25
 // ms to poll order status
-c.order_poll_time = 5000
+c.order_poll_time = 10000
 // ms to wait for settlement (after an order cancel) This is relatively important.
 c.wait_for_settlement = 15000
 // % to mark up or down price for orders
