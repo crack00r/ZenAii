@@ -65,7 +65,7 @@ Then open setup.sh for instructions to set up trader.py with your telegram API k
 
 Open setup.sh for more instructions please!!! This will guide you the way.
 
-###NOTE:
+### NOTE:
 ### Sometimes code wont see messages
 
 #### To check, type anything but a pair into your telegram window. You should see a message ID (about in range of 1-10000) appear in the shell.
