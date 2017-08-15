@@ -99,16 +99,15 @@ while True:
         print('Started Selling:' + flagstr)
         process = './zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + flagstr
         try:
-            #Timeout to give polo time to update
             subprocess.call(process,shell=True)
         except Exception as e:
-            print(e)
-        print('Starting Buy Of:' + variablestr)
-        process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr			
+            print(e)		
         try:
             global variable
             variable=str(variable)
             variablestr=str(variable)
+            print('Starting Buy Of:' + variablestr)
+            process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
             #Timeout to give polo time to update
             time.sleep(10)
             subprocess.call(process,shell=True)
