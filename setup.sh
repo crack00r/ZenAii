@@ -9,6 +9,7 @@ sudo pip3 install pycurl
 sudo pip3 install pyyaml
 sudo pip3 install pyparse
 sudo pip3 install parse
+sudo pip3 install pyaes
 sudo python3 setup.py gen_tl
 sudo python3 setup.py install
 sudo npm install
