@@ -114,3 +114,10 @@ while True:
             flag = variable
         except Exception as e:
             print(e)
+    
+        
+
+
+
+
+

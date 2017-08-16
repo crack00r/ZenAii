@@ -1,4 +1,3 @@
-
 var c = module.exports = {}
 
 // mongo configuration
@@ -12,7 +11,7 @@ c.mongo.password = null
 c.mongo.replicaSet = null
 
 // default selector. only used if omitting [selector] argument from a command.
-c.selector = 'poloniex.USDT-BTC'
+c.selector = 'gdax.BTC-USD'
 // name of default trade strategy
 c.strategy = 'trend_ema'
 
@@ -26,8 +25,8 @@ c.gdax.passphrase = 'YOUR-PASSPHRASE'
 
 // to enable Poloniex trading, enter your API credentials:
 c.poloniex = {}
-c.poloniex.key = ''
-c.poloniex.secret = ''
+c.poloniex.key = 'YOUR-API-KEY'
+c.poloniex.secret = 'YOUR-SECRET'
 // please note: poloniex does not support market orders via the API
 
 // to enable Kraken trading, enter your API credentials:
@@ -70,6 +69,18 @@ c.quadriga.secret = 'YOUR-SECRET';
 // replace with the client id used at login, as a string, not number
 c.quadriga.client_id = 'YOUR-CLIENT-ID';
 
+// to enable BTC-e trading, enter your API credentials:
+c.btce = {}
+c.btce.key = 'YOUR-API-KEY'
+c.btce.secret = 'YOUR-SECRET'
+
+// to enable Gemini trading, enter your API credentials:
+c.gemini = {}
+c.gemini.key = 'YOUR-API-KEY'
+c.gemini.secret = 'YOUR-API-SECRET'
+// set to false to trade on the live platform API
+c.gemini.sandbox = true
+
 // Optional stop-order triggers:
 
 // sell if price drops below this % of bought price (0 to disable)
@@ -86,27 +97,26 @@ c.profit_stop_pct = 1
 // avoid trading at a slippage above this pct
 c.max_slippage_pct = 5
 // buy with this % of currency balance (WARNING : sim won't work properly if you set this value to 100) 
-c.buy_pct = 100
+c.buy_pct = 99
 // sell with this % of asset balance (WARNING : sim won't work properly if you set this value to 100)
-c.sell_pct = 100
+c.sell_pct = 99
 // ms to adjust non-filled order after
-// ADJUST THE OPTIONS BELOW AT YOUR OWN RISK (which means, be very careful!)
-c.order_adjust_time = 30000
+c.order_adjust_time = 5000
 // avoid selling at a loss below this pct
 c.max_sell_loss_pct = 25
 // ms to poll order status
-c.order_poll_time = 10000
-// ms to wait for settlement (after an order cancel) This is relatively important.
-c.wait_for_settlement = 15000
+c.order_poll_time = 5000
+// ms to wait for settlement (after an order cancel)
+c.wait_for_settlement = 5000
 // % to mark up or down price for orders
 c.markup_pct = 0
 // become a market taker (high fees) or a market maker (low fees)
-c.order_type = 'taker'
+c.order_type = 'maker'
 
 // Misc options:
 
 // default # days for backfill and sim commands
-c.days = 30
+c.days = 14
 // ms to poll new trades at
 c.poll_trades = 30000
 // amount of currency to start simulations with
@@ -121,3 +131,23 @@ c.rsi_periods = 14
 c.balance_snapshot_period = '15m'
 // avg. amount of slippage to apply to sim trades
 c.avg_slippage_pct = 0.045
+
+//xmpp configs
+
+c.xmppon=0  // 0 xmpp disabled; 1 xmpp enabled (credentials should be correct)
+
+if (c.xmppon) {
+
+  c.xmpp = require('simple-xmpp');
+
+  c.xmpp.connect({
+                jid                    : 'trader@domain.com', //xmpp account trader bot
+                password               : 'Password',          //xmpp password
+                host                   : 'domain.com',        //xmpp domain
+                port                   : 5222                 //xmpp port
+  });
+
+  c.xmppto="MeMyselfAndI@domain.com" //xmpp alert to friend
+}
+//end xmpp configs
+

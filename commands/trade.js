@@ -20,6 +20,7 @@ module.exports = function container (get, set, clear) {
       .option('--order_type <type>', 'order type to use (maker/taker)', /^(maker|taker)$/i, c.order_type)
       .option('--paper', 'use paper trading mode (no real trades will take place)', Boolean, false)
       .option('--manual', 'watch price and account balance, but do not perform trades automatically', Boolean, false)
+      .option('--non_interactive', 'disable keyboard inputs to the bot', Boolean, false)
       .option('--currency_capital <amount>', 'for paper trading, amount of start capital in currency', Number, c.currency_capital)
       .option('--asset_capital <amount>', 'for paper trading, amount of start capital in asset', Number, c.asset_capital)
       .option('--avg_slippage_pct <pct>', 'avg. amount of slippage to apply to paper trades', Number, c.avg_slippage_pct)
@@ -97,7 +98,8 @@ module.exports = function container (get, set, clear) {
         var periods = get('db.periods')
 
         console.log('fetching pre-roll data:')
-        var backfiller = spawn(path.resolve(__dirname, '..', 'zenbot.sh'), ['backfill', so.selector, '--days', days])
+        var zenbot_cmd = process.platform === 'win32' ? 'zenbot.bat' : 'zenbot.sh'; // Use 'win32' for 64 bit windows too
+        var backfiller = spawn(path.resolve(__dirname, '..', zenbot_cmd), ['backfill', so.selector, '--days', days])
         backfiller.stdout.pipe(process.stdout)
         backfiller.stderr.pipe(process.stderr)
         backfiller.on('exit', function (code) {
@@ -116,6 +118,7 @@ module.exports = function container (get, set, clear) {
               opts.query.time = {$gt: db_cursor}
             }
             else {
+              trade_cursor = s.exchange.getCursor(query_start) 
               opts.query.time = {$gte: query_start}
             }
             get('db.trades').select(opts, function (err, trades) {
@@ -154,33 +157,36 @@ module.exports = function container (get, set, clear) {
                     forwardScan()
                     setInterval(forwardScan, c.poll_trades)
                     readline.emitKeypressEvents(process.stdin)
-                    process.stdin.on('keypress', function (key, info) {
-                      if (key === 'b' && !info.ctrl ) {
-                        engine.executeSignal('buy')
-                      }
-                      else if (key === 'B' && !info.ctrl) {
-                        engine.executeSignal('buy', null, null, false, true)
-                      }
-                      else if (key === 's' && !info.ctrl) {
-                        engine.executeSignal('sell')
-                      }
-                      else if (key === 'S' && !info.ctrl) {
-                        engine.executeSignal('sell', null, null, false, true)
-                      }
-                      else if ((key === 'c' || key === 'C') && !info.ctrl) {
-                        delete s.buy_order
-                        delete s.sell_order
-                      }
-                      else if ((key === 'm' || key === 'M') && !info.ctrl) {
-                        so.manual = !so.manual
-                        console.log('\nmanual mode: ' + (so.manual ? 'ON' : 'OFF') + '\n')
-                      }
-                      else if (info.name === 'c' && info.ctrl) {
-                        // @todo: cancel open orders before exit
-                        console.log()
-                        process.exit()
-                      }
-                    })
+                    if (!so.non_interactive && process.stdin.setRawMode) {
+                      process.stdin.setRawMode(true)
+                      process.stdin.on('keypress', function (key, info) {
+                        if (key === 'b' && !info.ctrl ) {
+                          engine.executeSignal('buy')
+                        }
+                        else if (key === 'B' && !info.ctrl) {
+                          engine.executeSignal('buy', null, null, false, true)
+                        }
+                        else if (key === 's' && !info.ctrl) {
+                          engine.executeSignal('sell')
+                        }
+                        else if (key === 'S' && !info.ctrl) {
+                          engine.executeSignal('sell', null, null, false, true)
+                        }
+                        else if ((key === 'c' || key === 'C') && !info.ctrl) {
+                          delete s.buy_order
+                          delete s.sell_order
+                        }
+                        else if ((key === 'm' || key === 'M') && !info.ctrl) {
+                          so.manual = !so.manual
+                          console.log('\nmanual mode: ' + (so.manual ? 'ON' : 'OFF') + '\n')
+                        }
+                        else if (info.name === 'c' && info.ctrl) {
+                          // @todo: cancel open orders before exit
+                          console.log()
+                          process.exit()
+                        }
+                      })
+                    }
                   })
                 })
                 return
@@ -253,7 +259,13 @@ module.exports = function container (get, set, clear) {
                   console.error('\n' + moment().format('YYYY-MM-DD HH:mm:ss') + ' - error saving session')
                   console.error(err)
                 }
-                engine.writeReport(true)
+                if (s.period) {
+                  engine.writeReport(true)
+                } else {
+                  readline.clearLine(process.stdout)
+                  readline.cursorTo(process.stdout, 0)
+                  process.stdout.write('Waiting on first live trade to display reports, could be a few minutes ...')
+                }
               })
             })
           }

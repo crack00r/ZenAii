@@ -1,4 +1,0 @@
-from .update_profile_photo import UpdateProfilePhotoRequest
-from .upload_profile_photo import UploadProfilePhotoRequest
-from .delete_photos import DeletePhotosRequest
-from .get_user_photos import GetUserPhotosRequest

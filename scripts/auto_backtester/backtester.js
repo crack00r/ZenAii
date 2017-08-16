@@ -80,7 +80,8 @@ let runCommand = (strategy, cb) => {
     speed: `--baseline_periods=${strategy.baseline_periods} --trigger_factor=${strategy.trigger_factor}`,
     trend_ema: `--trend_ema=${strategy.trend_ema} --oversold_rsi=${strategy.oversold_rsi} --oversold_rsi_periods=${strategy.oversold_rsi_periods} --neutral_rate=${strategy.neutral_rate}`
   };
-  let command = `zenbot sim ${simArgs} ${strategyArgs[strategyName]} --period=${strategy.period}  --min_periods=${strategy.min_periods}`;
+  let zenbot_cmd = process.platform === 'win32' ? 'zenbot.bat' : 'zenbot.sh'; // Use 'win32' for 64 bit windows too
+  let command = `${zenbot_cmd} sim ${simArgs} ${strategyArgs[strategyName]} --period=${strategy.period}  --min_periods=${strategy.min_periods}`;
   console.log(`[ ${countArr.length}/${strategies[strategyName].length} ] ${command}`);
 
   shell.exec(command, {silent:true, async:true}, (code, stdout, stderr) => {
@@ -109,9 +110,10 @@ let processOutput = output => {
   let buyHold       = buyHoldRegexp.exec(output2)[1];
   let vsBuyHold     = vsBuyHoldRegexp.exec(output2)[1];
   let wlMatch       = wlRegexp.exec(output2);
-  let wins          = parseInt(wlMatch[1]);
-  let losses        = parseInt(wlMatch[2]);
-  let errorRate     = errRegexp.exec(output2)[1];
+  let errMatch      = errRegexp.exec(output2);
+  let wins          = wlMatch !== null ? parseInt(wlMatch[1]) : 0;
+  let losses        = wlMatch !== null ? parseInt(wlMatch[2]) : 0;
+  let errorRate     = errMatch !== null ? parseInt(errMatch[1]) : 0;
   let days          = parseInt(params.days);
 
   let roi = roundp(
@@ -274,7 +276,6 @@ if (args.indexOf('--strategy') !== -1) {
   strategyName = args[args.indexOf('--strategy') + 1];
 }
 
-// let tasks = strategies_tend_ema.map(strategy => {
 let tasks = strategies[strategyName].map(strategy => {
   return cb => {
     runCommand(strategy, cb)
