@@ -97,7 +97,7 @@ c.profit_stop_pct = 1
 // avoid trading at a slippage above this pct
 c.max_slippage_pct = 5
 // buy with this % of currency balance (WARNING : sim won't work properly if you set this value to 100) 
-c.buy_pct = 100
+c.buy_pct = 25
 // sell with this % of asset balance (WARNING : sim won't work properly if you set this value to 100)
 c.sell_pct = 100
 // ms to adjust non-filled order after
@@ -109,7 +109,7 @@ c.order_poll_time = 10000
 // ms to wait for settlement (after an order cancel)
 c.wait_for_settlement = 10000
 // % to mark up or down price for orders
-c.markup_pct = 0
+c.markup_pct = 2
 // become a market taker (high fees) or a market maker (low fees)
 c.order_type = 'taker'
 
