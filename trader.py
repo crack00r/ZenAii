@@ -21,6 +21,7 @@ print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
+print('When testing, look for a small-digit number in the 1-10000 range appearing in the console or a buy/sell order')
 
 threads = []
 flag = "test"
@@ -89,11 +90,11 @@ def runitt():
     global variable
     variable=str(variable)
     variablestr=str(variable)
-    print('Starting Buy Of:' + variablestr + 'And will wait until 25pct bought')
+    print('Starting Buy Of: ' + variablestr + ' --  And will wait until 25pct bought')
     process0='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
     proc0 = subprocess.Popen(process0,shell=True)
     proc0.communicate()
-    print('Starting Profit Sell Of:' + variablestr + ' Sell 100 pct at 2pct markup or manually sell using poloniex web interface... You must do this manually')
+    print('Starting Profit Sell Of: ' + variablestr + ' --  Sell 100 pct at 2pct markup or manually sell using poloniex web interface... You must do this manually')
     process1='./zenbot.sh sell --order_adjust_time=10000 --markup_pct=2 --debug  poloniex.' + variablestr	
     proc1 = subprocess.Popen(process1,shell=True)
 
@@ -104,9 +105,4 @@ client.add_update_handler(update_handler)
 
 input('Press <ENTER> to exit...')
 client.disconnect()
-
-
-
-
-
 
