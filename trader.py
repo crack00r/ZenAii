@@ -7,17 +7,10 @@ from telethon.tl.types.input_peer_self import InputPeerSelf
 from telethon.tl.types.input_peer_chat import InputPeerChat
 from telethon.tl.types.input_peer_channel import InputPeerChannel
 from telethon.tl.functions.messages.forward_message import ForwardMessageRequest
-import json
-import requests
-import re
-import unicodedata
-import subprocess
+import multiprocessing, sys, time, json, requests, re, unicodedata, subprocess, os, sqlite3, threading
 from subprocess import PIPE,Popen,STDOUT
-import os
-import sqlite3
-import time
 from decimal import *
-import threading
+
 global flag
 global variable
 
@@ -27,7 +20,7 @@ print('Cryptoping Auto-Trader, with live updates...')
 print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('CTRL-C To exit')
-
+print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
 
 threads = []
 flag = "test"
@@ -83,32 +76,35 @@ def update_handler(d):
                     var1 = var.replace('#', '')
                     btc = '-BTC'
                     variable = var1 + btc
+                    m = create_process()
+                    m.start()
                     client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
                 except Exception as e:
                     print(e)
-                try:
-                    variable=str(variable)
-                    variablestr=str(variable)
-                    print('Starting Buy Of:' + variablestr)
-                    process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
-                    proc0 = subprocess.Popen(process,shell=True)
-                    proc0.communicate()
-                    print('Starting Profit Sell Of:' + variablestr)
-                    process='./zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + variablestr	
-                    proc1 = subprocess.Popen(process,shell=True)
-                    time.sleep(600)
-                    proc1.kill()
-                    print('Starting Unprofit Sell Of:' + variablestr)
-                    process='./zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + variablestr	
-                    proc1 = subprocess.Popen(process,shell=True)
-                except Exception as e:
-                    print(e)
+
+def create_process():
+    return multiprocessing.Process(target = runitt , args = ())
+ 
+def runitt():
+    global variable
+    variable=str(variable)
+    variablestr=str(variable)
+    print('Starting Buy Of:' + variablestr + 'And will wait until 25pct bought')
+    process0='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
+    proc0 = subprocess.Popen(process0,shell=True)
+    proc0.communicate()
+    print('Starting Profit Sell Of:' + variablestr + ' Sell 100 pct at 2pct markup or manually sell using poloniex web interface... You must do this manually')
+    process1='./zenbot.sh sell --order_adjust_time=10000 --markup_pct=2 --debug  poloniex.' + variablestr	
+    proc1 = subprocess.Popen(process1,shell=True)
+
+
 
 # From now on, any update received will be passed to 'update_handler'
 client.add_update_handler(update_handler)
 
 input('Press <ENTER> to exit...')
 client.disconnect()
+
 
 
 
