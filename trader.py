@@ -22,8 +22,6 @@ print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
 print('When testing, look for a small-digit number in the 1-10000 range appearing in the console or a buy/sell order')
-print('The current measurement period is as fast as it can get... which is like a hair trigger at 30s/60s period... maybe increase...')
-
 
 threads = []
 flag = "test"
@@ -71,6 +69,73 @@ def update_handler(d):
         regex_string = "(?<=\W)(%s)(?=\W)" % "|".join(word_list)
         finder = re.compile(regex_string)
         string_to_be_searched = d
+        results = finder.findall(" %s " % string_to_be_searched)
+        result_set = set(results)
+        print(idd)
+        for word in word_list:
+            if word in result_set:
+                try:
+                    var = word
+                    var1 = var.replace('#', '')
+                    btc = '-BTC'
+                    variable = var1 + btc
+                    m = create_process()
+                    m.start()
+                    client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
+                except Exception as e:
+                    print(e)
+
+def create_process():
+    return multiprocessing.Process(target = runitt , args = ())
+ 
+def runitt():
+    global variable
+    global var1
+    variable=str(variable)
+    variablestr=str(variable)
+    print('Starting Buy Of: ' + variablestr + ' --  And will wait until bought')
+    process0='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
+    proc0 = subprocess.Popen(process0,shell=True)
+    proc0.communicate()
+    if var1:
+       while True:
+            print('Taking first price measurement')
+            wjdata1 = requests.get('https://poloniex.com/public?command=returnTicker&period=60').json()
+            for key in wjdata1:
+                if re.match(r'BTC_' + var1 + '+', key):
+                    print(key)       
+                    pct2=(wjdata1[key]['last'])
+                    pct3=Decimal(pct2)
+                    pr1=format(pct3, 'f')
+                    print(pr1)
+            time.sleep(30)
+            wjdata2 = requests.get('https://poloniex.com/public?command=returnTicker&period=60').json()
+            print('Taking second price measurement')
+            for key in wjdata2:
+                if re.match(r'BTC_' + var1 + '+', key):
+                    print(key)       
+                    pct2=(wjdata2[key]['last'])
+                    pct3=Decimal(pct2)
+                    pr2=format(pct3, 'f')
+                    print(pr2)
+            if pr1 > pr2:
+                print('Starting Sell Of: ' + variablestr + ' --  Sell 100 pct at 0pct markup or manually sell using poloniex web interface... Be careful not to encounter a bug')
+                process1='./zenbot.sh sell --order_adjust_time=10000 --markup_pct=0 --debug  poloniex.' + variablestr	
+                proc1 = subprocess.Popen(process1,shell=True)
+                break
+            else:
+                print('Waiting for profit...')
+
+
+
+# From now on, any update received will be passed to 'update_handler'
+client.add_update_handler(update_handler)
+
+input('Press <ENTER> to exit...')
+client.disconnect()
+
+
+
         results = finder.findall(" %s " % string_to_be_searched)
         result_set = set(results)
         print(idd)
