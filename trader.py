@@ -86,36 +86,27 @@ def update_handler(d):
                     client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
                 except Exception as e:
                     print(e)
+                try:
+                    variable=str(variable)
+                    variablestr=str(variable)
+                    print('Starting Buy Of:' + variablestr)
+                    process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
+                    proc0 = subprocess.Popen(process,shell=True)
+                    proc0.communicate()
+                    print('Starting Profit Sell Of:' + variablestr)
+                    process='./zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + variablestr	
+                    proc1 = subprocess.Popen(process,shell=True)
+                    time.sleep(600)
+                    proc1.kill()
+                    print('Starting Unprofit Sell Of:' + variablestr)
+                    process='./zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + variablestr	
+                    proc1 = subprocess.Popen(process,shell=True)
+                except Exception as e:
+                    print(e)
 
 # From now on, any update received will be passed to 'update_handler'
 client.add_update_handler(update_handler)
 
-while True:
-    global flag
-    global variable
-    if flag == variable:
-            varzz = "varzz"
-    else:
-        flagstr = str(flag)
-        print('Started Selling:' + flagstr)
-        process = './zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + flagstr
-        try:
-            subprocess.call(process,shell=True)
-        except Exception as e:
-            print(e)		
-        try:
-            time.sleep(5)
-            global variable
-            variable=str(variable)
-            variablestr=str(variable)
-            print('Starting Buy Of:' + variablestr)
-            process='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
-            subprocess.call(process,shell=True)
-            flag = variable
-        except Exception as e:
-            print(e)
-    
-        
 
 
 
