@@ -107,6 +107,8 @@ def update_handler(d):
 # From now on, any update received will be passed to 'update_handler'
 client.add_update_handler(update_handler)
 
+input('Press <ENTER> to exit...')
+client.disconnect()
 
 
 
