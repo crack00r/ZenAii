@@ -108,7 +108,7 @@ def runitt():
                     pct3=Decimal(pct2)
                     pr1=format(pct3, 'f')
                     print(pr1)
-            time.sleep(180)
+            time.sleep(600)
             wjdata2 = requests.get('https://poloniex.com/public?command=returnTicker&period=60').json()
             print('Taking second price measurement')
             for key in wjdata2:
