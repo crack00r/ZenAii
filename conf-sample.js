@@ -88,7 +88,7 @@ c.sell_stop_pct = 0
 // buy if price surges above this % of sold price (0 to disable)
 c.buy_stop_pct = 0
 // enable trailing sell stop when reaching this % profit (0 to disable)
-c.profit_stop_enable_pct = 0
+c.profit_stop_enable_pct = 1.25
 // maintain a trailing stop this % below the high-water mark of profit
 c.profit_stop_pct = 1
 
@@ -109,7 +109,7 @@ c.order_poll_time = 10000
 // ms to wait for settlement (after an order cancel)
 c.wait_for_settlement = 10000
 // % to mark up or down price for orders
-c.markup_pct = 2
+c.markup_pct = -2
 // become a market taker (high fees) or a market maker (low fees)
 c.order_type = 'taker'
 
