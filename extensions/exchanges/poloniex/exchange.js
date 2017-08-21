@@ -168,7 +168,7 @@ module.exports = function container (get, set, clear) {
         currencyPair: joinProduct(opts.product_id),
         rate: opts.price,
         amount: opts.size,
-        postOnly: opts.post_only === false ? '0' : '1'
+//        postOnly: opts.post_only === false ? '0' : '1'
       }
       client._private(type, params, function (err, result) {
         if (typeof result === 'string') {
@@ -179,7 +179,7 @@ module.exports = function container (get, set, clear) {
           status: 'open',
           price: opts.price,
           size: opts.size,
-          post_only: !!opts.post_only,
+//          post_only: !!opts.post_only,
           created_at: new Date().getTime(),
           filled_size: '0'
         }
