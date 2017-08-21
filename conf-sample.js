@@ -110,7 +110,6 @@ c.order_poll_time = 10000
 // ms to wait for settlement (after an order cancel)
 c.wait_for_settlement = 10000
 // % to mark up or down price for orders
-=======
 c.markup_pct = -2
 // become a market taker (high fees) or a market maker (low fees)
 c.order_type = 'taker'
