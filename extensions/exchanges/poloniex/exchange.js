@@ -226,8 +226,7 @@ module.exports = function container (get, set, clear) {
         }
         var active = false
         if (!body.forEach) {
-          console.error('\nreturnOpenOrders odd result:')
-          console.error(body)
+          return retry('getOrder', args)
         }
         else {
           body.forEach(function (api_order) {
