@@ -88,7 +88,7 @@ c.sell_stop_pct = 0
 // buy if price surges above this % of sold price (0 to disable)
 c.buy_stop_pct = 0
 // enable trailing sell stop when reaching this % profit (0 to disable)
-c.profit_stop_enable_pct = 0
+c.profit_stop_enable_pct = 1.25
 // maintain a trailing stop this % below the high-water mark of profit
 c.profit_stop_pct = 1
 
@@ -98,7 +98,7 @@ c.profit_stop_pct = 1
 c.max_slippage_pct = 5
 // buy with this % of currency balance (WARNING : sim won't work properly if you set this value to 100)
 // The more you decrease this the more you will get fees. 50/50 seems okay for now.. any suggestions? But I run at 25% for dev testing.
-c.buy_pct = 100
+c.buy_pct = 20
 // sell with this % of asset balance (WARNING : sim won't work properly if you set this value to 100)
 c.sell_pct = 100
 // ms to adjust non-filled order after
@@ -110,7 +110,7 @@ c.order_poll_time = 10000
 // ms to wait for settlement (after an order cancel)
 c.wait_for_settlement = 10000
 // % to mark up or down price for orders
-c.markup_pct = 0
+c.markup_pct = -2
 // become a market taker (high fees) or a market maker (low fees)
 c.order_type = 'taker'
 
