@@ -282,7 +282,7 @@ def run():
         # initiate the data calculations
         df = Chart(api, coin).dataFrame()
         df.dropna(inplace=False)
-        data = (df.tail(2)[['macd']])
+        data = (df.tail(2)[['percentChange']])
         #Turn Data into a string
         txt=str(data)
         print(data)
