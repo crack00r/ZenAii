@@ -326,14 +326,14 @@ def run():
             elif (Decimal(float4) == 0):
                 print(coincoin + ' -- Not Enough Data On This Measurement')
             # If Macd is not positive, then sell
-            elif ( 0 > diff):
+            elif ( 0 >= diff):
                 print(coincoin, Decimal(float3), Decimal(float4))
                 print('Current diff is: ' + diffstr)
                 ke1=coin.replace('BTC_', '')
                 ke3='-BTC'
                 ke8=ke1+ke3
                 sellstr=ke8
-                start(sell())
+                return multiprocessing.Process(target = sellsell , args = ())
                 break
             
             else:
@@ -354,14 +354,14 @@ def run():
             elif (Decimal(float4) == 0):
                 print(coincoin + ' -- Not Enough Data On This Measurement')
             # If Macd is not positive, then sell
-            elif ( 0 > diff):
+            elif ( 0 >= diff):
                 print(coincoin, Decimal(float3), Decimal(float4))
                 print('Current diff is: ' + diffstr)
                 ke1=coin.replace('BTC_', '')
                 ke3='-BTC'
                 ke8=ke1+ke3
                 sellstr=ke8
-                start(sell())
+                return multiprocessing.Process(target = sellsell , args = ())
                 break
              
             else:
