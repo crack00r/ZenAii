@@ -8,10 +8,9 @@ from telethon.tl.types.input_peer_self import InputPeerSelf
 from telethon.tl.types.input_peer_chat import InputPeerChat
 from telethon.tl.types.input_peer_channel import InputPeerChannel
 from telethon.tl.functions.messages.forward_message import ForwardMessageRequest
-import multiprocessing, sys, json, requests, re, unicodedata, subprocess, os, sqlite3, threading, multiprocessing
+import multiprocessing, sys, json, requests, re, unicodedata, subprocess, os, sqlite3, threading
 from subprocess import PIPE,Popen,STDOUT
 from decimal import *
-
 from time import time
 from time import sleep
 import logging
@@ -35,6 +34,7 @@ global var1
 global sellstr
 global buystr
 global coincoin
+global coin
 print('Cryptoping Auto-Trader, with live updates...')
 print('Cryptoping Auto-Trader, with live updates...')
 print('Cryptoping Auto-Trader, with live updates...')
@@ -70,8 +70,9 @@ def generate_random_long():
 def update_handler(d):
     global flag
     global variable
-    global var1
+    global coincoin
     global buystr
+    global sellstr
     # On this example, we just show the update object itself
     d = str(d)
     #testChannel
@@ -98,9 +99,9 @@ def update_handler(d):
             if word in result_set:
                 try:
                     var = word
-                    var1 = var.replace('#', '')
+                    coincoin = var.replace('#', '')
                     btc = '-BTC'
-                    buystr = var1 + btc
+                    buystr = coincoin + btc
                     m = buy()
                     m.start()
                     m = run()
@@ -269,15 +270,17 @@ class Chart(object):
 
 def run():
     while True:
-        global var1
         global sellstr
+        global buystr
+        global coincoin
+        global coin
         btcc='BTC_'
-        coincoin= btcc + var1
+        coin= btcc + coincoin
         from poloniex import Poloniex
         api = Poloniex(jsonNums=float)
         # Below is the coin list, please follow its format... I choose coins with volume above 1000 daily.
         # initiate the data calculations
-        df = Chart(api, coincoin).dataFrame()
+        df = Chart(api, coin).dataFrame()
         df.dropna(inplace=False)
         data = (df.tail(2)[['macd']])
         #Turn Data into a string
@@ -302,40 +305,69 @@ def run():
         rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
         deny = rg.search(txt)
         # Two if statements to decide what will happen... buy/sell/deny trade on limited data
-        if m:
-            if deny:
-                print(coincoin + ' -- Percent changed too small to care')
+        if deny:
+            # Set the floats from the data that are real numbers
+
+            float1=deny.group(1)
+            var1=deny.group(2)
+            signed_int1=deny.group(3)
+            float2=deny.group(4)
+            var2=deny.group(5)
+            signed_int2=deny.group(6)
+            float1= float1 + var1 + signed_int1
+            float2= float2 + var2 + signed_int2
+            float3 = float(float1)
+            float4 = float(float2)
+            # Calculate the difference in the two numbers
+            diff = Decimal(float(float4 - float3))
+            diffstr = str(diff)
+            if (Decimal(float3) == 0):
+                print(coincoin + ' -- Not Enough Data On This Measurement')
+            elif (Decimal(float4) == 0):
+                print(coincoin + ' -- Not Enough Data On This Measurement')
+            # If Macd is not positive, then sell
+            elif ( 0 > diff):
+                print(coincoin, Decimal(float3), Decimal(float4))
+                print('Current diff is: ' + diffstr)
+                ke1=coin.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                sellstr=ke8
+                start(sell())
+                break
+            
             else:
-                # Set the floats from the data that are real numbers
-                float1=m.group(1)
-                float2=m.group(2)
-                float3 = float(float1)
-                float4 = float(float2)
-                # Calculate the difference in the two numbers
-                diff = Decimal(float(float4 - float3))
-                diffstr = str(diff)
-                if (Decimal(float3) == 0):
-                    print(coincoin + ' -- Not Enough Data On This Measurement')
-                elif (Decimal(float4) == 0):
-                    print(coincoin + ' -- Not Enough Data On This Measurement')
-                # If Macd is not positive, then sell
-                elif ( 0 > diff):
-                    print(coincoin, Decimal(float3), Decimal(float4))
-                    print('Current diff is: ' + diffstr)
-                    ke1=var1.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    sellstr=ke8
-                    m = sell()
-                    m.start()
-                    break
-              
-                else:
-                    print(coincoin, Decimal(float3), Decimal(float4))
-                    print('Current diff is: ' + diffstr)
-                    print('Waiting...')
-        print('Waiting 15s so polo does not overload')
-        sleep(15)
+                print(coincoin, Decimal(float3), Decimal(float4))
+                print('Current diff is: ' + diffstr)
+                print('Waiting...')
+        elif m:
+            # Set the floats from the data that are real numbers
+            float1=m.group(1)
+            float2=m.group(2)
+            float3 = float(float1)
+            float4 = float(float2)
+            # Calculate the difference in the two numbers
+            diff = Decimal(float(float4 - float3))
+            diffstr = str(diff)
+            if (Decimal(float3) == 0):
+                print(coincoin + ' -- Not Enough Data On This Measurement')
+            elif (Decimal(float4) == 0):
+                print(coincoin + ' -- Not Enough Data On This Measurement')
+            # If Macd is not positive, then sell
+            elif ( 0 > diff):
+                print(coincoin, Decimal(float3), Decimal(float4))
+                print('Current diff is: ' + diffstr)
+                ke1=coin.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                sellstr=ke8
+                start(sell())
+                break
+             
+            else:
+                print(coincoin, Decimal(float3), Decimal(float4))
+                print('Current diff is: ' + diffstr)
+                print('Waiting...')
 
 def buy():
     return multiprocessing.Process(target = buybuy , args = ())
