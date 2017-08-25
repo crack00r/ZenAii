@@ -109,7 +109,7 @@ Follow the on-screen instructions, make sure to read README.md and README2.md
 Readme2.md:
 
 
-CryptoPing ZenAii Instructions
+CryptoAlert ZenAii Instructions
 ![happy](happy.png)
 
 
@@ -138,7 +138,7 @@ Installing Telethon manually
 2. Run the code generator: ``python3 setup.py gen_tl``
 3. Run the code install: ``python3 setup.py install``
 
-Running Cryptoping ZenAII
+Running CryptoAlert ZenAII
 ================
 If you've installed Telethon:
 To run the explorer after inputting your phone and API ID/Key:
