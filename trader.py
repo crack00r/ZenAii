@@ -102,8 +102,6 @@ def update_handler(d):
                     coincoin = var.replace('#', '')
                     btc = '-BTC'
                     buystr = coincoin + btc
-                    m = buy()
-                    m.start()
                     m = run()
                     m.start()
                     client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
@@ -352,7 +350,8 @@ def run():
             diff4 = (diff1 - diff)
             diff4str=str(diff4)
             print(diffstr1)
-            if (Decimal(diff1) < 0):
+            # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
+            if (Decimal(diff4) < 0):
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
                 ke1=word.replace('BTC_', '')
@@ -362,10 +361,16 @@ def run():
                 print('Selling on Downpct')
                 sellsell()
                 break
-            elif (Decimal(diff1) > 0):
-                print('Check 2 Reached - Waiting')
+            elif (Decimal(diff4) > 0):
+                print('Check 2 Reached - Buying')
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                buystr=ke8
+                print('Buying on Uptrend')
+                buybuy()
             else:
                 print(word)
                 print('Current macd diff is: ' + diff4str)
@@ -388,7 +393,7 @@ def run():
             diff4 = (diff1 - diff)
             diff4str=str(diff4)
             print(diffstr1)
-            if (Decimal(diff1) < 0):
+            if (Decimal(diff4) < 0):
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
                 ke1=word.replace('BTC_', '')
@@ -398,10 +403,16 @@ def run():
                 print('Selling on Downpct')
                 sellsell()
                 break
-            elif (Decimal(diff1) > 0):
-                print('Check 2 Reached - Waiting')
+            elif (Decimal(diff4) > 0):
+                print('Check 2 Reached - Buying')
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                buystr=ke8
+                print('Buying on Uptrend')
+                buybuy()
             else:
                 print(word)
                 print('Current macd diff is: ' + diff4str)
@@ -424,7 +435,7 @@ def run():
             diff4 = (diff1 - diff)
             diff4str=str(diff4)
             print(diffstr1)
-            if (Decimal(diff1) < 0):
+            if (Decimal(diff4) < 0):
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
                 ke1=word.replace('BTC_', '')
@@ -434,10 +445,16 @@ def run():
                 print('Selling on Downpct')
                 sellsell()
                 break
-            elif (Decimal(diff1) > 0):
-                print('Check 2 Reached - Waiting')
+            elif (Decimal(diff4) > 0):
+                print('Check 2 Reached - Buying')
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                buystr=ke8
+                print('Buying on Uptrend')
+                buybuy()
             else:
                 print(word)
                 print('Current macd diff is: ' + diff4str)
@@ -462,7 +479,7 @@ def run():
             diff4str=str(diff4)
             # Set the floats from the data that are real numbers
             # If Macd is not positive, then sell
-            if (Decimal(diff1) < 0):
+            if (Decimal(diff4) < 0):
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
                 ke1=word.replace('BTC_', '')
@@ -472,10 +489,16 @@ def run():
                 print('Selling on Downpct')
                 sellsell()
                 break
-            elif (Decimal(diff1) > 0):
-                print('Check 2 Reached - Waiting')
+            elif (Decimal(diff4) > 0):
+                print('Check 2 Reached - Buying')
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                buystr=ke8
+                print('Buying on Uptrend')
+                buybuy()
             else:
                 print(word)
                 print('Current macd diff is: ' + diff4str)
