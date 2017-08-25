@@ -1,4 +1,16 @@
+
 from __future__ import print_function
+from telethon import TelegramClient
+from telethon.tl.types import UpdateNewMessage
+from telethon.tl.types import InputPeerChat
+from telethon.tl.types import Message
+from telethon.tl.types.input_peer_self import InputPeerSelf
+from telethon.tl.types.input_peer_chat import InputPeerChat
+from telethon.tl.types.input_peer_channel import InputPeerChannel
+from telethon.tl.functions.messages.forward_message import ForwardMessageRequest
+import multiprocessing, sys, json, requests, re, unicodedata, subprocess, os, sqlite3, threading
+from subprocess import PIPE,Popen,STDOUT
+from decimal import *
 from time import time
 from time import sleep
 import logging
@@ -6,13 +18,102 @@ from operator import itemgetter
 from pymongo import MongoClient
 import pandas as pd
 import numpy as np
-import json, requests, re, multiprocessing, subprocess
-from decimal import *
-global buystr
+
+
+
+
+
+
+
+
+
+
+global flag
+global variable
+global var1
 global sellstr
+global buystr
+global coincoin
+global coin
+print('Cryptoping Auto-Trader, with live updates...')
+print('Cryptoping Auto-Trader, with live updates...')
+print('Cryptoping Auto-Trader, with live updates...')
+print('CTRL-C To exit')
+print('CTRL-C To exit')
+print('CTRL-C To exit')
+print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
+print('When testing, look for a small-digit number in the 1-10000 range appearing in the console or a buy/sell order')
+
+threads = []
+flag = "test"
+variable = "test"
+var1 = "test"
+api_id = 189914
+api_hash = '75b1fbdede4c49f7b7ca4a8681d5dfdf'
+# 'session_id' can be 'your_name'. It'll be saved as your_name.session
+client = TelegramClient('session_id', api_id, api_hash)
+client.connect()
+
+
+if not client.is_user_authorized():
+  client.send_code_request('+14698447320')
+  client.sign_in('+14698447320', input('Enter code: '))
+# Now you can use the connected client as you wish
+
+def generate_random_long():
+    import random
+    return random.choice(range(0,10000000))
+
+
+
+
+def update_handler(d):
+    global flag
+    global variable
+    global coincoin
+    global buystr
+    global sellstr
+    # On this example, we just show the update object itself
+    d = str(d)
+    #testChannel
+    re1 = '( id: )(?:[0-9][0-9]+)(,)' 
+
+    rg = re.compile(re1,re.IGNORECASE|re.DOTALL)
+    m = rg.search(d)
+    if m:
+        word1=m.group(0)
+        word2=word1.replace(' id: ', '')
+        word3=word2.replace(',', '')
+        word4=word3
+        idd = int(word4)
+        peer1 = InputPeerSelf()
+        #INPUT YOUR KEYWORDS BELOW
+        word_list = ["#DCR", "#LTC", "#NAUT", "#NXT", "#XCP", "#GRC", "#REP", "#PPC", "#RIC", "#STRAT", "#GAME", "#BTM", "#CLAM", "#ARDR", "#BLK", "#OMNI", "#SJCX", "#FLDC", "#BCH", "#DOGE", "#POT", "#VRC", "#ETH", "#PINK", "#NOTE", "#BTS", "#AMP", "#NAV", "#BELA", "#BCN", "#ETC", "#FLO", "#VIA", "#XBC", "#XPM", "#DASH", "#XVC", "#GNO", "#NMC", "#RADS", "#VTC", "#XEM", "#FCT", "#XRP", "#NXC", "#STEEM", "#SBD", "#BURST", "#XMR", "#DGB", "#LBC", "#BCY", "#PASC", "#SC", "#LSK", "#EXP", "#MAID", "#BTCD", "#SYS", "#GNT", "#HUC", "#EMC2", "#NEOS", "#ZEC", "#STR", "#ZRX", "#EMC2"]
+        regex_string = "(?<=\W)(%s)(?=\W)" % "|".join(word_list)
+        finder = re.compile(regex_string)
+        string_to_be_searched = d
+        results = finder.findall(" %s " % string_to_be_searched)
+        result_set = set(results)
+        print(idd)
+        for word in word_list:
+            if word in result_set:
+                try:
+                    var = word
+                    coincoin = var.replace('#', '')
+                    btc = '-BTC'
+                    buystr = coincoin + btc
+                    m = buy()
+                    m.start()
+                    m = run()
+                    m.start()
+                    client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
+                except Exception as e:
+                    print(e)
+
+
+
 logger = logging.getLogger(__name__)
 
-# This is still experimental! If MACD signal has not been reached, you will get an instant sell!
 def rsi(df, window, targetcol='weightedAverage', colname='rsi'):
     """ Calculates the Relative Strength Index (RSI) from a pandas dataframe
     http://stackoverflow.com/a/32346692/3389859
@@ -175,236 +276,210 @@ class Chart(object):
         # add percent change
         df['percentChange'] = df['close'].pct_change()
         return df
+
+
+
 def run():
     while True:
-        global buystr
         global sellstr
-        # Below is the coin list, please follow its format... I choose coins with volume above 1000 daily.
-        # full word_list = ["BTC_DCR", "BTC_LTC", "BTC_NAUT", "BTC_NXT", "BTC_XCP", "BTC_GRC", "BTC_REP", "BTC_PPC", "BTC_RIC", "BTC_STRAT", "BTC_GAME", "BTC_BTM", "BTC_CLAM", "BTC_ARDR", "BTC_BLK", "BTC_OMNI", "BTC_SJCX", "BTC_FLDC", "BTC_BCH", "BTC_DOGE", "BTC_POT", "BTC_VRC", "BTC_ETH", "BTC_PINK", "BTC_NOTE", "BTC_BTS", "BTC_AMP", "BTC_NAV", "BTC_BELA", "BTC_BCN", "BTC_ETC", "BTC_FLO", "BTC_VIA", "BTC_XBC", "BTC_XPM", "BTC_DASH", "BTC_XVC", "BTC_GNO", "BTC_NMC", "BTC_RADS", "BTC_VTC", "BTC_XEM", "BTC_FCT", "BTC_XRP", "BTC_NXC", "BTC_STEEM", "BTC_SBD", "BTC_BURST", "BTC_XMR", "BTC_DGB", "BTC_LBC", "BTC_BCY", "BTC_PASC", "BTC_SC", "BTC_LSK", "BTC_EXP", "BTC_MAID", "BTC_BTCD", "BTC_SYS", "BTC_GNT", "BTC_HUC", "BTC_EMC2", "BTC_NEOS", "BTC_ZEC", "BTC_STR"]
-        # Let's just use 5 for now... keeps things going quicker.
-        word_list = ["BTC_ETH"]
-        for word in word_list:
-            # initiate the data calculations
-            df = Chart(api, word).dataFrame()
-            df.dropna(inplace=True)
-            data = (df.tail(2)[['macd']])
-            data1 = (df.tail(2)[['emasig']])
-            #Turn Data into a string
-            txt=str(data)
-            txt1=str(data1)
-            # search for floats in the returned data
-            re1='.*?'	# Non-greedy match on filler
-            re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-            re3='.*?'	# Non-greedy match on filler
-            re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-            rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
-            m = rg.search(txt)
-            re1='.*?'	# Non-greedy match on filler
-            re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-            re3='.*?'	# Non-greedy match on filler
-            re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-            rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
-            m1 = rg.search(txt1)
-            # Search for floats that are too small to trade decision on
-            re1='.*?'	# Non-greedy match on filler
-            re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-            re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
-            re4='([-+]\\d+)'	# Integer Number 1
-            re5='.*?'	# Non-greedy match on filler
-            re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-            re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
-            re8='([-+]\\d+)'	# Integer Number 2
-            rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
-            deny = rg.search(txt)
-            re1='.*?'	# Non-greedy match on filler
-            re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-            re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
-            re4='([-+]\\d+)'	# Integer Number 1
-            re5='.*?'	# Non-greedy match on filler
-            re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-            re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
-            re8='([-+]\\d+)'	# Integer Number 2
-            rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
-            deny1 = rg.search(txt1)
-            # Two if statements to decide what will happen... buy/sell/deny trade on limited data
-            print(data)
-            print(data1)
-            if deny and deny1:
-                float1=deny.group(1) + deny.group(2) + deny.group(3)
-                float2=deny.group(4) + deny.group(5) + deny.group(6)
-                float3 = float(float1)
-                float4 = float(float2)
-                float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
-                float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
-                float7 = float(float5)
-                float8 = float(float6)
-                print(float3, float4, float7, float8)
-                # Calculate the difference in the two numbers
-                diff = Decimal(float(float7 - float3))
-                diff1 = Decimal(float(float8 - float4))
-                diffstr = str(diff)
-                diffstr1 = str(diff1)
-                diff4 = (diff1 - diff)
-                diff4str=str(diff4)
-                print(diffstr1)
-                if (Decimal(diff1) < 0):
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    sellstr=ke8
-                    print('Selling on Downpct')
-                    m = sell()
-                    m.start()
-                elif (Decimal(diff1) > 0):
-                    print('Check 2 Reached - Buying')
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    buystr=ke8
-                    print('Buying on Uptrend')
-                    m = buy()
-                    m.start()
-                else:
-                    print(word)
-                    print('Current macd diff is: ' + diff4str)
-                    print('Waiting...')
-            elif deny:
-                float1=deny.group(1) + deny.group(2) + deny.group(3)
-                float2=deny.group(4) + deny.group(5) + deny.group(6)
-                float3 = float(float1)
-                float4 = float(float2)
-                float5=m1.group(1)
-                float6=m1.group(2)
-                float7 = float(float5)
-                float8 = float(float6)
-                print(float3, float4, float7, float8)
-                # Calculate the difference in the two numbers
-                diff = Decimal(float(float7 - float3))
-                diff1 = Decimal(float(float8 - float4))
-                diffstr = str(diff)
-                diffstr1 = str(diff1)
-                diff4 = (diff1 - diff)
-                diff4str=str(diff4)
-                print(diffstr1)
-                if (Decimal(diff1) < 0):
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    sellstr=ke8
-                    print('Selling on Downpct')
-                    m = sell()
-                    m.start()
-                elif (Decimal(diff1) > 0):
-                    print('Check 2 Reached - Buying')
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    buystr=ke8
-                    print('Buying on Uptrend')
-                    m = buy()
-                    m.start()
-                else:
-                    print(word)
-                    print('Current macd diff is: ' + diff4str)
-                    print('Waiting...')
-            elif deny1:
-                float1=m.group(1)
-                float2=m.group(2)
-                float3 = float(float1)
-                float4 = float(float2)
-                float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
-                float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
-                float7 = float(float5)
-                float8 = float(float6)
-                print(float3, float4, float7, float8)
-                # Calculate the difference in the two numbers
-                diff = Decimal(float(float7 - float3))
-                diff1 = Decimal(float(float8 - float4))
-                diffstr = str(diff)
-                diffstr1 = str(diff1)
-                diff4 = (diff1 - diff)
-                diff4str=str(diff4)
-                print(diffstr1)
-                if (Decimal(diff1) < 0):
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    sellstr=ke8
-                    print('Selling on Downpct')
-                    m = sell()
-                    m.start()
-                elif (Decimal(diff1) > 0):
-                    print('Check 2 Reached - Buying')
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    buystr=ke8
-                    print('Buying on Uptrend')
-                    m = buy()
-                    m.start()
-                else:
-                    print(word)
-                    print('Current macd diff is: ' + diff4str)
-                    print('Waiting...')
+        global buystr
+        global coincoin
+        global coin
+        btcc='BTC_'
+        coin= btcc + coincoin
+        word=coin
+        from poloniex import Poloniex
+        api = Poloniex(jsonNums=float)
+        df = Chart(api, word).dataFrame()
+        df.dropna(inplace=True)
+        data = (df.tail(2)[['macd']])
+        data1 = (df.tail(2)[['emasig']])
+        #Turn Data into a string
+        txt=str(data)
+        txt1=str(data1)
+        # search for floats in the returned data
+        re1='.*?'	# Non-greedy match on filler
+        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+        re3='.*?'	# Non-greedy match on filler
+        re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+        rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
+        m = rg.search(txt)
+        re1='.*?'	# Non-greedy match on filler
+        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+        re3='.*?'	# Non-greedy match on filler
+        re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+        rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
+        m1 = rg.search(txt1)
+        # Search for floats that are too small to trade decision on
+        re1='.*?'	# Non-greedy match on filler
+        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+        re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
+        re4='([-+]\\d+)'	# Integer Number 1
+        re5='.*?'	# Non-greedy match on filler
+        re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+        re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
+        re8='([-+]\\d+)'	# Integer Number 2
+        rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
+        deny = rg.search(txt)
+        re1='.*?'	# Non-greedy match on filler
+        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+        re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
+        re4='([-+]\\d+)'	# Integer Number 1
+        re5='.*?'	# Non-greedy match on filler
+        re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+        re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
+        re8='([-+]\\d+)'	# Integer Number 2
+        rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
+        deny1 = rg.search(txt1)
+        # Two if statements to decide what will happen... buy/sell/deny trade on limited data
+        print(data)
+        print(data1)
+        if deny and deny1:
+            float1=deny.group(1) + deny.group(2) + deny.group(3)
+            float2=deny.group(4) + deny.group(5) + deny.group(6)
+            float3 = float(float1)
+            float4 = float(float2)
+            float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
+            float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
+            float7 = float(float5)
+            float8 = float(float6)
+            print(float3, float4, float7, float8)
+            # Calculate the difference in the two numbers
+            diff = Decimal(float(float7 - float3))
+            diff1 = Decimal(float(float8 - float4))
+            diffstr = str(diff)
+            diffstr1 = str(diff1)
+            diff4 = (diff1 - diff)
+            diff4str=str(diff4)
+            print(diffstr1)
+            if (Decimal(diff1) < 0):
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                sellstr=ke8
+                print('Selling on Downpct')
+                sellsell()
+                break
+            elif (Decimal(diff1) > 0):
+                print('Check 2 Reached - Waiting')
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
             else:
-                float1=m.group(1)
-                float2=m.group(2)
-                float3 = float(float1)
-                float4 = float(float2)
-                float5=m1.group(1)
-                float6=m1.group(2)
-                float7 = float(float5)
-                float8 = float(float6)
-                print(float3, float4, float7, float8)
-                # Calculate the difference in the two numbers
-                diff = Decimal(float(float7 - float3))
-                diff1 = Decimal(float(float8 - float4))
-                diffstr = str(diff)
-                diffstr1 = str(diff1)
-                print(diffstr1)
-                diff4 = (diff1 - diff)
-                diff4str=str(diff4)
-                 # Set the floats from the data that are real numbers
-                 # If Macd is not positive, then sell
-                if (Decimal(diff1) < 0):
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    sellstr=ke8
-                    print('Selling on Downpct')
-                    m = sell()
-                    m.start()
-                elif (Decimal(diff1) > 0):
-                    print('Check 2 Reached - Buying')
-                    print(word)
-                    print('Current macd hist diff is: ' + diff4str)
-                    ke1=word.replace('BTC_', '')
-                    ke3='-BTC'
-                    ke8=ke1+ke3
-                    buystr=ke8
-                    print('Buying on Uptrend')
-                    m = buy()
-                    m.start()
-                else:
-                    print(word)
-                    print('Current macd diff is: ' + diff4str)
-                    print('Waiting...')
-
-
+                print(word)
+                print('Current macd diff is: ' + diff4str)
+                print('Waiting...')
+        elif deny:
+            float1=deny.group(1) + deny.group(2) + deny.group(3)
+            float2=deny.group(4) + deny.group(5) + deny.group(6)
+            float3 = float(float1)
+            float4 = float(float2)
+            float5=m1.group(1)
+            float6=m1.group(2)
+            float7 = float(float5)
+            float8 = float(float6)
+            print(float3, float4, float7, float8)
+            # Calculate the difference in the two numbers
+            diff = Decimal(float(float7 - float3))
+            diff1 = Decimal(float(float8 - float4))
+            diffstr = str(diff)
+            diffstr1 = str(diff1)
+            diff4 = (diff1 - diff)
+            diff4str=str(diff4)
+            print(diffstr1)
+            if (Decimal(diff1) < 0):
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                sellstr=ke8
+                print('Selling on Downpct')
+                sellsell()
+                break
+            elif (Decimal(diff1) > 0):
+                print('Check 2 Reached - Waiting')
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
+            else:
+                print(word)
+                print('Current macd diff is: ' + diff4str)
+                print('Waiting...')
+        elif deny1:
+            float1=m.group(1)
+            float2=m.group(2)
+            float3 = float(float1)
+            float4 = float(float2)
+            float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
+            float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
+            float7 = float(float5)
+            float8 = float(float6)
+            print(float3, float4, float7, float8)
+            # Calculate the difference in the two numbers
+            diff = Decimal(float(float7 - float3))
+            diff1 = Decimal(float(float8 - float4))
+            diffstr = str(diff)
+            diffstr1 = str(diff1)
+            diff4 = (diff1 - diff)
+            diff4str=str(diff4)
+            print(diffstr1)
+            if (Decimal(diff1) < 0):
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                sellstr=ke8
+                print('Selling on Downpct')
+                sellsell()
+                break
+            elif (Decimal(diff1) > 0):
+                print('Check 2 Reached - Waiting')
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
+            else:
+                print(word)
+                print('Current macd diff is: ' + diff4str)
+                print('Waiting...')
+        else:
+            float1=m.group(1)
+            float2=m.group(2)
+            float3 = float(float1)
+            float4 = float(float2)
+            float5=m1.group(1)
+            float6=m1.group(2)
+            float7 = float(float5)
+            float8 = float(float6)
+            print(float3, float4, float7, float8)
+            # Calculate the difference in the two numbers
+            diff = Decimal(float(float7 - float3))
+            diff1 = Decimal(float(float8 - float4))
+            diffstr = str(diff)
+            diffstr1 = str(diff1)
+            print(diffstr1)
+            diff4 = (diff1 - diff)
+            diff4str=str(diff4)
+            # Set the floats from the data that are real numbers
+            # If Macd is not positive, then sell
+            if (Decimal(diff1) < 0):
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
+                ke1=word.replace('BTC_', '')
+                ke3='-BTC'
+                ke8=ke1+ke3
+                sellstr=ke8
+                print('Selling on Downpct')
+                sellsell()
+                break
+            elif (Decimal(diff1) > 0):
+                print('Check 2 Reached - Waiting')
+                print(word)
+                print('Current macd hist diff is: ' + diff4str)
+            else:
+                print(word)
+                print('Current macd diff is: ' + diff4str)
+                print('Waiting...')
 
 def buy():
     return multiprocessing.Process(target = buybuy , args = ())
@@ -416,6 +491,7 @@ def buybuy():
     print('Starting BUY Of: ' + variablestr + ' -- MACD Is Increasing')
     process1='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
     subprocess.Popen(process1,shell=True)
+
 def sell():
     return multiprocessing.Process(target = sellsell , args = ())
  
@@ -424,17 +500,11 @@ def sellsell():
     variable=str(sellstr)
     variablestr=str(variable)
     print('Starting SELL Of: ' + variablestr + ' -- Macd Is Decreasing')
-    process1='./zenbot.sh sell --order_adjust_time=10000 --debug  poloniex.' + variablestr	
+    process1='./zenbot.sh sell --order_adjust_time=10000 --markup_pct=0 --debug  poloniex.' + variablestr	
     subprocess.Popen(process1,shell=True)
 
-if __name__ == '__main__':
-    from poloniex import Poloniex
-    #logging.basicConfig(level=logging.DEBUG)
-    #logging.getLogger("poloniex").setLevel(logging.INFO)
-    #logging.getLogger('requests').setLevel(logging.ERROR)
-    api = Poloniex(jsonNums=float)
-    run()
+# From now on, any update received will be passed to 'update_handler'
+client.add_update_handler(update_handler)
+input('Press <ENTER> to exit...')
+client.disconnect()
 
-
-
-    
