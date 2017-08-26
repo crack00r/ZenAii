@@ -471,6 +471,8 @@ def runrun():
             diff1 = Decimal(float(float8 - float4))
             diffstr = str(diff)
             diffstr1 = str(diff1)
+            diff4 = (diff1 - diff)
+            diff4str=str(diff4)
             print(diffstr1)
             print('Buying ' + word + ' on error correction loop.')
             ke1=word.replace('BTC_', '')
