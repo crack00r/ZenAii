@@ -8,7 +8,7 @@ from telethon.tl.types.input_peer_self import InputPeerSelf
 from telethon.tl.types.input_peer_chat import InputPeerChat
 from telethon.tl.types.input_peer_channel import InputPeerChannel
 from telethon.tl.functions.messages.forward_message import ForwardMessageRequest
-import multiprocessing, sys, json, requests, re, unicodedata, subprocess, os, sqlite3, threading
+import sys, json, requests, re, unicodedata, subprocess, os, sqlite3, threading
 from subprocess import PIPE,Popen,STDOUT
 from decimal import *
 from time import time
@@ -18,7 +18,7 @@ from operator import itemgetter
 from pymongo import MongoClient
 import pandas as pd
 import numpy as np
-
+import multiprocessing
 
 
 
@@ -102,7 +102,7 @@ def update_handler(d):
                     coincoin = var.replace('#', '')
                     btc = '-BTC'
                     buystr = coincoin + btc
-                    m = run()
+                    m = multiprocessing.Process(target = runrun , args = ())
                     m.start()
                     client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
                 except Exception as e:
@@ -277,7 +277,7 @@ class Chart(object):
 
 
 
-def run():
+def runrun():
     while True:
         global sellstr
         global buystr
