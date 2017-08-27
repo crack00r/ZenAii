@@ -103,8 +103,6 @@ def update_handler(d):
                     var = word
                     buy =  'buyit'
                     coincoin = var.replace('#', '')
-                    btc = '-BTC'
-                    buystr = coincoin + btc
                     while (running == 'running'):
                         varnothing = 'nothing'
                     else:
@@ -341,9 +339,10 @@ def runrun():
         re8='([-+]\\d+)'	# Integer Number 2
         rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
         deny1 = rg.search(txt1)
-        # Two if statements to decide what will happen... buy/sell/deny trade on limited data
+        # 4 if statements to decide what will happen...
         print(data)
         print(data1)
+        print(waitwait)
         if deny and deny1:
             float1=deny.group(1) + deny.group(2) + deny.group(3)
             float2=deny.group(4) + deny.group(5) + deny.group(6)
@@ -363,8 +362,7 @@ def runrun():
             diff4str=str(diff4)
             print(diffstr1)
             print('Buying ' + word + ' on error correction loop.')
-            print(waitwait)
-            ke1=word.replace('BTC_', '')
+            ke1=coincoin.replace('BTC_', '')
             ke3='-BTC'
             ke8=ke1+ke3
             buystr=ke8
@@ -406,8 +404,8 @@ def runrun():
             print(diffstr1)
             print('Buying ' + word + ' on error correction loop.')
             ke1=word.replace('BTC_', '')
-            ke3='-BTC'
-            ke8=ke1+ke3
+            ke3='BTC-'
+            ke8=ke3+ke1
             buystr=ke8
             buybuy()
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
@@ -446,8 +444,8 @@ def runrun():
             print(diffstr1)
             print('Buying ' + word + ' on error correction loop.')
             ke1=word.replace('BTC_', '')
-            ke3='-BTC'
-            ke8=ke1+ke3
+            ke3='BTC-'
+            ke8=ke3+ke1
             buystr=ke8
             buybuy()
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
@@ -517,7 +515,7 @@ def buybuy():
     global buystr
     variable=str(buystr)
     variablestr=str(variable)
-    print('Starting BUY Of: ' + variablestr + ' -- MACD Is Increasing')
+    print('Starting BUY Of: ' + variablestr + ' Buying and waiting for macd buy signal to allow macd sell.')
     process1='./zenbot.sh buy --order_adjust_time=20000 --debug  poloniex.' + variablestr	
     subprocess.Popen(process1,shell=True)
 
@@ -528,7 +526,7 @@ def sellsell():
     global sellstr
     variable=str(sellstr)
     variablestr=str(variable)
-    print('Starting SELL Of: ' + variablestr + ' -- Macd Is Decreasing')
+    print('Starting SELL Of: ' + variablestr + 'Selling on macd sell signal. Lines have crossed!!!')
     process1='./zenbot.sh sell --order_adjust_time=20000 --markup_pct=0 --debug  poloniex.' + variablestr	
     subprocess.Popen(process1,shell=True)
 
