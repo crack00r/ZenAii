@@ -27,7 +27,7 @@ import multiprocessing
 
 
 
-
+global waitwait
 global flag
 global variable
 global var1
@@ -43,6 +43,7 @@ print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
 print('When testing, look for a small-digit number in the 1-10000 range appearing in the console or a buy/sell order')
+waitwait = False
 threads = []
 flag = "test"
 variable = "test"
@@ -72,6 +73,7 @@ def update_handler(d):
     global coincoin
     global buystr
     global sellstr
+    global waitwait
     # On this example, we just show the update object itself
     d = str(d)
     #testChannel
@@ -98,6 +100,7 @@ def update_handler(d):
             if word in result_set:
                 try:
                     var = word
+                    waitwait =  False
                     coincoin = var.replace('#', '')
                     btc = '-BTC'
                     buystr = coincoin + btc
@@ -277,7 +280,6 @@ class Chart(object):
 
 
 def runrun():
-    waitwait = False
     print('Waitwait set to False before sell and waiting on macd up signal before sell.')
     while True:
         global sellstr
@@ -285,6 +287,7 @@ def runrun():
         global coincoin
         global coin
         global flag
+        global waitwait
         btcc='BTC_'
         coin= btcc + coincoin
         word=coin
@@ -360,11 +363,11 @@ def runrun():
             buybuy()
             
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff1) > 1):
+            if (Decimal(diff1) > 0):
                 waitwait = True
                 print('Waiting... MACD is on UP signal for: ' + word)
                 
-            elif (Decimal(diff1) < 0)and (waitwait == True):
+            elif (Decimal(diff1) < 0) and (waitwait == True):
                 print(word)
                 print('Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
@@ -400,7 +403,7 @@ def runrun():
             buystr=ke8
             buybuy()
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff4) > 0):
+            if (Decimal(diff1) > 0):
                 waitwait = True
                 print('Waiting... MACD is on UP signal for: ' + word)
                 
