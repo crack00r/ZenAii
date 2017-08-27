@@ -43,7 +43,6 @@ print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
 print('When testing, look for a small-digit number in the 1-10000 range appearing in the console or a buy/sell order')
-
 threads = []
 flag = "test"
 variable = "test"
