@@ -1,530 +1,154 @@
+var c = module.exports = {}
 
-from __future__ import print_function
-from telethon import TelegramClient
-from telethon.tl.types import UpdateNewMessage
-from telethon.tl.types import InputPeerChat
-from telethon.tl.types import Message
-from telethon.tl.types.input_peer_self import InputPeerSelf
-from telethon.tl.types.input_peer_chat import InputPeerChat
-from telethon.tl.types.input_peer_channel import InputPeerChannel
-from telethon.tl.functions.messages.forward_message import ForwardMessageRequest
-import sys, json, requests, re, unicodedata, subprocess, os, sqlite3, threading
-from subprocess import PIPE,Popen,STDOUT
-from decimal import *
-from time import time
-from time import sleep
-import logging
-from operator import itemgetter
-from pymongo import MongoClient
-import pandas as pd
-import numpy as np
-import multiprocessing
+// mongo configuration
+c.mongo = {}
+c.mongo.host = process.env.MONGODB_PORT_27017_TCP_ADDR || 'localhost'
+c.mongo.port = 27017
+c.mongo.db = 'zenbot4'
+c.mongo.username = null
+c.mongo.password = null
+// when using mongodb replication, i.e. when running a mongodb cluster, you can define your replication set here; when you are not using replication (most of the users), just set it to `null` (default).
+c.mongo.replicaSet = null
 
+// default selector. only used if omitting [selector] argument from a command.
+c.selector = 'gdax.BTC-USD'
+// name of default trade strategy
+c.strategy = 'speed'
 
+// Exchange API keys:
 
+// to enable GDAX trading, enter your API credentials:
+c.gdax = {}
+c.gdax.key = 'YOUR-API-KEY'
+c.gdax.b64secret = 'YOUR-BASE64-SECRET'
+c.gdax.passphrase = 'YOUR-PASSPHRASE'
 
+// to enable Poloniex trading, enter your API credentials:
+c.poloniex = {}
+c.poloniex.key = 'ARVEW5PQ-NPOSB3XG-TI8O7PPO-EQIQE70E'
+c.poloniex.secret = 'f73a61e7cf19c7df1e38be3d149281283d434ccb5d7ccde01246bc53edbd820c2b3595a602595d8ba03b6fff736df3012bb5eea26d7d505c61ef1cfa69c21a2e'
+// please note: poloniex does not support market orders via the API
 
+// to enable Kraken trading, enter your API credentials:
+c.kraken = {}
+c.kraken.key = 'YOUR-API-KEY'
+c.kraken.secret = 'YOUR-SECRET'
+// Please read API TOS on https://www.kraken.com/u/settings/api
+c.kraken.tosagree = 'disagree'
 
+// to enable Bittrex trading, enter your API credentials:
+c.bittrex = {}
+c.bittrex.key = 'YOUR-API-KEY'
+c.bittrex.secret = 'YOUR-SECRET'
+// make sure to give your API key access to only: "Trade Limit" and "Read Info",
+// please note that this might change in the future.
+// please note that bittrex API is limited, you cannot use backfills or sims (paper/live trading only)
 
+// to enable Bitfinex trading, enter your API credentials:
+c.bitfinex = {}
+c.bitfinex.key = 'YOUR-API-KEY'
+c.bitfinex.secret = 'YOUR-SECRET'
+// May use 'exchange' or 'trading' wallet balances. However margin trading may not work...read the API documentation.
+c.bitfinex.wallet = 'exchange'
 
-global waitwait
-global flag
-global variable
-global var1
-global sellstr
-global buystr
-global coincoin
-global coin
-print('Cryptoping Auto-Trader, with live updates...')
-print('Cryptoping Auto-Trader, with live updates...')
-print('Cryptoping Auto-Trader, with live updates...')
-print('CTRL-C To exit')
-print('CTRL-C To exit')
-print('CTRL-C To exit')
-print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
-print('When testing, look for a small-digit number in the 1-10000 range appearing in the console or a buy/sell order')
-waitwait = False
-threads = []
-flag = "test"
-variable = "test"
-var1 = "test"
-api_id = 189914
-api_hash = '75b1fbdede4c49f7b7ca4a8681d5dfdf'
-# 'session_id' can be 'your_name'. It'll be saved as your_name.session
-client = TelegramClient('session_id', api_id, api_hash)
-client.connect()
+// to enable Bitfinex trading, enter your API credentials:
+c.bitstamp = {}
+c.bitstamp.key = 'YOUR-API-KEY'
+c.bitstamp.secret = 'YOUR-SECRET'
+// A client ID is required on Bitstamp
+c.bitstamp.client_id = 'YOUR-CLIENT-ID'
 
+// to enable QuadrigaCX tranding, enter your API credentials:
+c.quadriga = {}
+c.quadriga.key = 'YOUR-API-KEY';
 
-if not client.is_user_authorized():
-  client.send_code_request('+14698447320')
-  client.sign_in('+14698447320', input('Enter code: '))
-# Now you can use the connected client as you wish
+// this is the manual secret key entered by editing the API access
+// and NOT the md5 hash you see in the summary
+c.quadriga.secret = 'YOUR-SECRET';
 
-def generate_random_long():
-    import random
-    return random.choice(range(0,10000000))
+// replace with the client id used at login, as a string, not number
+c.quadriga.client_id = 'YOUR-CLIENT-ID';
 
+// to enable BTC-e trading, enter your API credentials:
+c.btce = {}
+c.btce.key = 'YOUR-API-KEY'
+c.btce.secret = 'YOUR-SECRET'
 
+// to enable Gemini trading, enter your API credentials:
+c.gemini = {}
+c.gemini.key = 'YOUR-API-KEY'
+c.gemini.secret = 'YOUR-API-SECRET'
+// set to false to trade on the live platform API
+c.gemini.sandbox = true
 
+// Optional stop-order triggers:
 
-def update_handler(d):
-    global flag
-    global variable
-    global coincoin
-    global buystr
-    global sellstr
-    global waitwait
-    # On this example, we just show the update object itself
-    d = str(d)
-    #testChannel
-    re1 = '( id: )(?:[0-9][0-9]+)(,)' 
+// sell if price drops below this % of bought price (0 to disable)
+c.sell_stop_pct = 0
+// buy if price surges above this % of sold price (0 to disable)
+c.buy_stop_pct = 0
+// enable trailing sell stop when reaching this % profit (0 to disable)
+c.profit_stop_enable_pct = 1.25
+// maintain a trailing stop this % below the high-water mark of profit
+c.profit_stop_pct = 1
 
-    rg = re.compile(re1,re.IGNORECASE|re.DOTALL)
-    m = rg.search(d)
-    if m:
-        word1=m.group(0)
-        word2=word1.replace(' id: ', '')
-        word3=word2.replace(',', '')
-        word4=word3
-        idd = int(word4)
-        peer1 = InputPeerSelf()
-        #INPUT YOUR KEYWORDS BELOW
-        word_list = ["#DCR", "#LTC", "#NAUT", "#NXT", "#XCP", "#GRC", "#REP", "#PPC", "#RIC", "#STRAT", "#GAME", "#BTM", "#CLAM", "#ARDR", "#BLK", "#OMNI", "#SJCX", "#FLDC", "#BCH", "#DOGE", "#POT", "#VRC", "#ETH", "#PINK", "#NOTE", "#BTS", "#AMP", "#NAV", "#BELA", "#BCN", "#ETC", "#FLO", "#VIA", "#XBC", "#XPM", "#DASH", "#XVC", "#GNO", "#NMC", "#RADS", "#VTC", "#XEM", "#FCT", "#XRP", "#NXC", "#STEEM", "#SBD", "#BURST", "#XMR", "#DGB", "#LBC", "#BCY", "#PASC", "#SC", "#LSK", "#EXP", "#MAID", "#BTCD", "#SYS", "#GNT", "#HUC", "#EMC2", "#NEOS", "#ZEC", "#STR", "#ZRX", "#EMC2"]
-        regex_string = "(?<=\W)(%s)(?=\W)" % "|".join(word_list)
-        finder = re.compile(regex_string)
-        string_to_be_searched = d
-        results = finder.findall(" %s " % string_to_be_searched)
-        result_set = set(results)
-        print(idd)
-        for word in word_list:
-            if word in result_set:
-                try:
-                    var = word
-                    waitwait =  False
-                    coincoin = var.replace('#', '')
-                    btc = '-BTC'
-                    buystr = coincoin + btc
-                    m = multiprocessing.Process(target = runrun , args = ())
-                    m.start()
-                    client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
-                except Exception as e:
-                    print(e)
+// Order execution rules:
 
-
-
-logger = logging.getLogger(__name__)
-
-def rsi(df, window, targetcol='weightedAverage', colname='rsi'):
-    """ Calculates the Relative Strength Index (RSI) from a pandas dataframe
-    http://stackoverflow.com/a/32346692/3389859
-    """
-    series = df[targetcol]
-    delta = series.diff().dropna()
-    u = delta * 0
-    d = u.copy()
-    u[delta > 0] = delta[delta > 0]
-    d[delta < 0] = -delta[delta < 0]
-    # first value is sum of avg gains
-    u[u.index[window - 1]] = np.mean(u[:window])
-    u = u.drop(u.index[:(window - 1)])
-    # first value is sum of avg losses
-    d[d.index[window - 1]] = np.mean(d[:window])
-    d = d.drop(d.index[:(window - 1)])
-    rs = u.ewm(com=window - 1,
-               ignore_na=False,
-               min_periods=0,
-               adjust=False).mean() / d.ewm(com=window - 1,
-                                            ignore_na=False,
-                                            min_periods=0,
-                                            adjust=False).mean()
-    df[colname] = 100 - 100 / (1 + rs)
-    return df
+// avoid trading at a slippage above this pct
+c.max_slippage_pct = 5
+// buy with this % of currency balance (WARNING : sim won't work properly if you set this value to 100)
+// The more you decrease this the more you will get fees. 50/50 seems okay for now.. any suggestions? But I run at 25% for dev testing.
+c.buy_pct = 100
+// sell with this % of asset balance (WARNING : sim won't work properly if you set this value to 100)
+c.sell_pct = 100
+// ms to adjust non-filled order after
+c.order_adjust_time = 20000
+// avoid selling at a loss below this pct
+c.max_sell_loss_pct = 25
+// ms to poll order status
+c.order_poll_time = 5000
+// ms to wait for settlement (after an order cancel)
+c.wait_for_settlement = 15000
+// % to mark up or down price for orders
+c.markup_pct = 0
+// become a market taker (high fees) or a market maker (low fees)
+c.order_type = 'taker'
 
 
-def sma(df, window, targetcol='weightedAverage', colname='sma'):
-    """ Calculates Simple Moving Average on a 'targetcol' in a pandas dataframe
-    """
-    df[colname] = df[targetcol].rolling(window=window, center=False).mean()
-    return df
+// Misc options:
 
+// default # days for backfill and sim commands
+c.days = 14
+// ms to poll new trades at
+c.poll_trades = 30000
+// amount of currency to start simulations with
+c.currency_capital = 1000
+// amount of asset to start simulations with
+c.asset_capital = 0
+// for sim, reverse time at the end of the graph, normalizing buy/hold to 0
+c.symmetrical = false
+// number of periods to calculate RSI at
+c.rsi_periods = 14
+// period to record balances for stats
+c.balance_snapshot_period = '15m'
+// avg. amount of slippage to apply to sim trades
+c.avg_slippage_pct = 0.045
 
-def ema(df, window, targetcol='weightedAverage', colname='ema', **kwargs):
-    """ Calculates Expodential Moving Average on a 'targetcol' in a pandas
-    dataframe """
-    df[colname] = df[targetcol].ewm(
-        span=window,
-        min_periods=kwargs.get('min_periods', 1),
-        adjust=kwargs.get('adjust', True),
-        ignore_na=kwargs.get('ignore_na', False)
-    ).mean()
-    return df
-def emamacd(df, window, targetcol='macd', colname='ema', **kwargs):
-    """ Calculates Expodential Moving Average on a 'targetcol' in a pandas
-    dataframe """
-    df[colname] = df[targetcol].ewm(
-        span=window,
-        min_periods=kwargs.get('min_periods', 1),
-        adjust=kwargs.get('adjust', True),
-        ignore_na=kwargs.get('ignore_na', False)
-    ).mean()
-    return df
+//xmpp configs
 
-def macd(df, fastcol='emafast', slowcol='emaslow', colname='macd'):
-    """ Calculates the differance between 'fastcol' and 'slowcol' in a pandas
-    dataframe """
-    df[colname] = df[fastcol] - df[slowcol]
-    return df
+c.xmppon=0  // 0 xmpp disabled; 1 xmpp enabled (credentials should be correct)
 
+if (c.xmppon) {
 
-def bbands(df, window, targetcol='weightedAverage', stddev=2.0):
-    """ Calculates Bollinger Bands for 'targetcol' of a pandas dataframe """
-    if not 'sma' in df:
-        df = sma(df, window, targetcol)
-    df['bbtop'] = df['sma'] + stddev * df[targetcol].rolling(
-        min_periods=window,
-        window=window,
-        center=False).std()
-    df['bbbottom'] = df['sma'] - stddev * df[targetcol].rolling(
-        min_periods=window,
-        window=window,
-        center=False).std()
-    df['bbrange'] = df['bbtop'] - df['bbbottom']
-    df['bbpercent'] = ((df[targetcol] - df['bbbottom']) / df['bbrange']) - 0.5
-    return df
+  c.xmpp = require('simple-xmpp');
 
+  c.xmpp.connect({
+                jid                    : 'trader@domain.com', //xmpp account trader bot
+                password               : 'Password',          //xmpp password
+                host                   : 'domain.com',        //xmpp domain
+                port                   : 5222                 //xmpp port
+  });
 
-class Chart(object):
-    """ Saves and retrieves chart data to/from mongodb. It saves the chart
-    based on candle size, and when called, it will automaticly update chart
-    data if needed using the timestamp of the newest candle to determine how
-    much data needs to be updated """
-
-    def __init__(self, api, pair, **kwargs):
-        """
-        api = poloniex api object
-        pair = market pair
-        period = time period of candles (default: 5 Min)
-        """
-        self.pair = pair
-        self.api = api
-        self.period = kwargs.get('period', self.api.MINUTE * 5)
-        self.db = MongoClient()['poloniex']['%s_%s_chart' %
-                                            (self.pair, str(self.period))]
-
-    def __call__(self, size=0):
-        """ Returns raw data from the db, updates the db if needed """
-        # get old data from db
-        old = sorted(list(self.db.find()), key=itemgetter('_id'))
-        try:
-            # get last candle
-            last = old[-1]
-        except:
-            # no candle found, db collection is empty
-            last = False
-        # no entrys found, get last year of data to fill the db
-        if not last:
-            logger.warning('%s collection is empty!',
-                           '%s_%s_chart' % (self.pair, str(self.period)))
-            new = self.api.returnChartData(self.pair,
-                                           period=self.period,
-                                           start=time() - self.api.YEAR)
-        # we have data in db already
-        else:
-            new = self.api.returnChartData(self.pair,
-                                           period=self.period,
-                                           start=int(last['_id']))
-        # add new candles
-        updateSize = len(new)
-        logger.info('Updating %s with %s new entrys!',
-                    self.pair + '-' + str(self.period), str(updateSize))
-        # show progress
-        for i in range(updateSize):
-            print("\r%s/%s" % (str(i + 1), str(updateSize)), end=" complete ")
-            date = new[i]['date']
-            del new[i]['date']
-            self.db.update_one({'_id': date}, {"$set": new[i]}, upsert=True)
-        print('')
-        logger.debug('Getting chart data from db')
-        # return data from db
-        return sorted(list(self.db.find()), key=itemgetter('_id'))[-size:]
-
-    def dataFrame(self, size=0, window=120):
-        # get data from db
-        data = self.__call__(size)
-        # make dataframe
-        df = pd.DataFrame(data)
-        # format dates
-        df['date'] = [pd.to_datetime(c['_id'], unit='s') for c in data]
-        # del '_id'
-        del df['_id']
-        # set 'date' col as index
-        df.set_index('date', inplace=True)
-        # calculate/add sma and bbands
-        df = bbands(df, window)
-        df = ema(df, window // 26, colname='emaslow')
-        # add fast ema
-        df = ema(df, window // 12, colname='emafast')
-        # add macd
-        df = macd(df)
-        df = emamacd(df, window // 9, colname='emasig')
-        df = macd(df)
-        # add rsi
-        df = rsi(df, window // 5)
-        # add candle body and shadow size
-        df['bodysize'] = df['open'] - df['close']
-        df['shadowsize'] = df['high'] - df['low']
-        # add percent change
-        df['percentChange'] = df['close'].pct_change()
-        return df
-
-
-
-def runrun():
-    print('Waitwait set to False before sell and waiting on macd up signal before sell.')
-    while True:
-        global sellstr
-        global buystr
-        global coincoin
-        global coin
-        global flag
-        global waitwait
-        btcc='BTC_'
-        coin= btcc + coincoin
-        word=coin
-        from poloniex import Poloniex
-        api = Poloniex(jsonNums=float)
-        df = Chart(api, word).dataFrame()
-        df.dropna(inplace=True)
-        data = (df.tail(2)[['macd']])
-        data1 = (df.tail(2)[['emasig']])
-        #Turn Data into a string
-        txt=str(data)
-        txt1=str(data1)
-        # search for floats in the returned data
-        re1='.*?'	# Non-greedy match on filler
-        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-        re3='.*?'	# Non-greedy match on filler
-        re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-        rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
-        m = rg.search(txt)
-        re1='.*?'	# Non-greedy match on filler
-        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-        re3='.*?'	# Non-greedy match on filler
-        re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-        rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
-        m1 = rg.search(txt1)
-        # Search for floats that are too small to trade decision on
-        re1='.*?'	# Non-greedy match on filler
-        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-        re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
-        re4='([-+]\\d+)'	# Integer Number 1
-        re5='.*?'	# Non-greedy match on filler
-        re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-        re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
-        re8='([-+]\\d+)'	# Integer Number 2
-        rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
-        deny = rg.search(txt)
-        re1='.*?'	# Non-greedy match on filler
-        re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
-        re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
-        re4='([-+]\\d+)'	# Integer Number 1
-        re5='.*?'	# Non-greedy match on filler
-        re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
-        re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
-        re8='([-+]\\d+)'	# Integer Number 2
-        rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
-        deny1 = rg.search(txt1)
-        # Two if statements to decide what will happen... buy/sell/deny trade on limited data
-        print(data)
-        print(data1)
-        if deny and deny1:
-            float1=deny.group(1) + deny.group(2) + deny.group(3)
-            float2=deny.group(4) + deny.group(5) + deny.group(6)
-            float3 = float(float1)
-            float4 = float(float2)
-            float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
-            float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
-            float7 = float(float5)
-            float8 = float(float6)
-            print(float3, float4, float7, float8)
-            # Calculate the difference in the two numbers
-            diff = Decimal(float(float7 - float3))
-            diff1 = Decimal(float(float8 - float4))
-            diffstr = str(diff)
-            diffstr1 = str(diff1)
-            diff4 = (diff1 - diff)
-            diff4str=str(diff4)
-            print(diffstr1)
-            print('Buying ' + word + ' on error correction loop.')
-            ke1=word.replace('BTC_', '')
-            ke3='-BTC'
-            ke8=ke1+ke3
-            buystr=ke8
-            buybuy()
-            
-            # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff1) > 0):
-                waitwait = True
-                print('Waiting... MACD is on UP signal for: ' + word)
-                
-            elif (Decimal(diff1) < 0) and (waitwait == True):
-                print(word)
-                print('Current macd hist diff is: ' + diff4str)
-                sellstr=ke8
-                print('Selling... MACD is on DOWN Signal for: ' + word)
-                sellsell()
-                break
-            else:
-                print(word)
-                print('Current macd diff is: ' + diff4str)
-                print('Waiting for MACD UP Signal for: ' + word)
-        elif deny:
-            float1=deny.group(1) + deny.group(2) + deny.group(3)
-            float2=deny.group(4) + deny.group(5) + deny.group(6)
-            float3 = float(float1)
-            float4 = float(float2)
-            float5=m1.group(1)
-            float6=m1.group(2)
-            float7 = float(float5)
-            float8 = float(float6)
-            print(float3, float4, float7, float8)
-            # Calculate the difference in the two numbers
-            diff = Decimal(float(float7 - float3))
-            diff1 = Decimal(float(float8 - float4))
-            diffstr = str(diff)
-            diffstr1 = str(diff1)
-            diff4 = (diff1 - diff)
-            diff4str=str(diff4)
-            print(diffstr1)
-            print('Buying ' + word + ' on error correction loop.')
-            ke1=word.replace('BTC_', '')
-            ke3='-BTC'
-            ke8=ke1+ke3
-            buystr=ke8
-            buybuy()
-            # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff1) > 0):
-                waitwait = True
-                print('Waiting... MACD is on UP signal for: ' + word)
-                
-            elif (Decimal(diff1) < 0) and (waitwait == True):
-                print(word)
-                print('Current macd hist diff is: ' + diff4str)
-                sellstr=ke8
-                print('Selling... MACD is on DOWN Signal for: ' + word)
-                sellsell()
-                break
-            else:
-                print(word)
-                print('Current macd diff is: ' + diff4str)
-                print('Waiting for MACD UP Signal for: ' + word)
-        elif deny1:
-            float1=m.group(1)
-            float2=m.group(2)
-            float3 = float(float1)
-            float4 = float(float2)
-            float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
-            float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
-            float7 = float(float5)
-            float8 = float(float6)
-            print(float3, float4, float7, float8)
-            # Calculate the difference in the two numbers
-            diff = Decimal(float(float7 - float3))
-            diff1 = Decimal(float(float8 - float4))
-            diffstr = str(diff)
-            diffstr1 = str(diff1)
-            diff4 = (diff1 - diff)
-            diff4str=str(diff4)
-            print(diffstr1)
-            print('Buying ' + word + ' on error correction loop.')
-            ke1=word.replace('BTC_', '')
-            ke3='-BTC'
-            ke8=ke1+ke3
-            buystr=ke8
-            buybuy()
-            # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff1) > 0):
-                waitwait = True
-                print('Waiting... MACD is on UP signal for: ' + word)
-                
-            elif (Decimal(diff1) < 0) and (waitwait == True):
-                print(word)
-                print('Current macd hist diff is: ' + diff4str)
-                sellstr=ke8
-                print('Selling... MACD is on DOWN Signal for: ' + word)
-                sellsell()
-                break
-            else:
-                print(word)
-                print('Current macd diff is: ' + diff4str)
-                print('Waiting for MACD UP Signal for: ' + word)
-        elif m and m1:
-            float1=m.group(1)
-            float2=m.group(2)
-            float3 = float(float1)
-            float4 = float(float2)
-            float5=m1.group(1)
-            float6=m1.group(2)
-            float7 = float(float5)
-            float8 = float(float6)
-            print(float3, float4, float7, float8)
-            # Calculate the difference in the two numbers
-            diff = Decimal(float(float7 - float3))
-            diff1 = Decimal(float(float8 - float4))
-            diffstr = str(diff)
-            diffstr1 = str(diff1)
-            diff4 = (diff1 - diff)
-            diff4str=str(diff4)
-            print(diffstr1)
-            print('Buying ' + word + ' on error correction loop.')
-            ke1=word.replace('BTC_', '')
-            ke3='-BTC'
-            ke8=ke1+ke3
-            buystr=ke8
-            buybuy()
-            # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff1) > 0):
-                waitwait = True
-                print('Waiting... MACD is on UP signal for: ' + word)
-                
-            elif (Decimal(diff1) < 0) and (waitwait == True):
-                print(word)
-                print('Current macd hist diff is: ' + diff4str)
-                sellstr=ke8
-                print('Selling... MACD is on DOWN Signal for: ' + word)
-                sellsell()
-                break
-            else:
-                print(word)
-                print('Current macd diff is: ' + diff4str)
-                print('Waiting for MACD UP Signal for: ' + word)
-        else:
-            print('Regex did not match any matches for m, m1 or deny and deny1')
-
-def buy():
-    return multiprocessing.Process(target = buybuy , args = ())
- 
-def buybuy():
-    global buystr
-    variable=str(buystr)
-    variablestr=str(variable)
-    print('Starting BUY Of: ' + variablestr + ' -- MACD Is Increasing')
-    process1='./zenbot.sh buy --order_adjust_time=10000 --debug  poloniex.' + variablestr	
-    subprocess.Popen(process1,shell=True)
-
-def sell():
-    return multiprocessing.Process(target = sellsell , args = ())
- 
-def sellsell():
-    global sellstr
-    variable=str(sellstr)
-    variablestr=str(variable)
-    print('Starting SELL Of: ' + variablestr + ' -- Macd Is Decreasing')
-    process1='./zenbot.sh sell --order_adjust_time=10000 --markup_pct=0 --debug  poloniex.' + variablestr	
-    subprocess.Popen(process1,shell=True)
-
-# From now on, any update received will be passed to 'update_handler'
-client.add_update_handler(update_handler)
-input('Press <ENTER> to exit...')
-client.disconnect()
-
+  c.xmppto="MeMyselfAndI@domain.com" //xmpp alert to friend
+}
+//end xmpp configs
