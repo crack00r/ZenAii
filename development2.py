@@ -405,7 +405,7 @@ def runrun():
             print('Buying ' + word + ' on error correction loop.')
             ke1=word.replace('BTC_', '')
             ke3='BTC-'
-            ke8=ke3+ke1
+            ke8=ke1+ke3
             buystr=ke8
             buybuy()
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
@@ -445,7 +445,7 @@ def runrun():
             print('Buying ' + word + ' on error correction loop.')
             ke1=word.replace('BTC_', '')
             ke3='BTC-'
-            ke8=ke3+ke1
+            ke8=ke1+ke3
             buystr=ke8
             buybuy()
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
