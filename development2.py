@@ -404,7 +404,7 @@ def runrun():
             print(diffstr1)
             print('Buying ' + word + ' on error correction loop.')
             ke1=word.replace('BTC_', '')
-            ke3='BTC-'
+            ke3='-BTC'
             ke8=ke1+ke3
             buystr=ke8
             buybuy()
@@ -444,7 +444,7 @@ def runrun():
             print(diffstr1)
             print('Buying ' + word + ' on error correction loop.')
             ke1=word.replace('BTC_', '')
-            ke3='BTC-'
+            ke3='-BTC'
             ke8=ke1+ke3
             buystr=ke8
             buybuy()
