@@ -506,7 +506,8 @@ def runrun():
                 print('Waiting for MACD UP Signal for: ' + word)
         else:
             print('Regex did not match any matches for m, m1 or deny and deny1')
-    
+    running = 'null'
+    print('Done running loop, ready for another coin')
 
 def buy():
     return multiprocessing.Process(target = buybuy , args = ())
