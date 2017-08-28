@@ -518,7 +518,7 @@ def buybuy():
     variablestr=str(variable)
     print('Starting BUY Of: ' + variablestr + ' Buying and waiting for macd buy signal to allow macd sell.')
     process1='./zenbot.sh buy --order_adjust_time=20000 --debug  poloniex.' + variablestr	
-    subprocess.Popen(process1,shell=True)
+    subprocess.call(process1,shell=True)
 
 def sell():
     return multiprocessing.Process(target = sellsell , args = ())
@@ -529,7 +529,7 @@ def sellsell():
     variablestr=str(variable)
     print('Starting SELL Of: ' + variablestr + 'Selling on macd sell signal. Lines have crossed!!!')
     process1='./zenbot.sh sell --order_adjust_time=20000 --markup_pct=0 --debug  poloniex.' + variablestr	
-    subprocess.Popen(process1,shell=True)
+    subprocess.call(process1,shell=True)
 
 # From now on, any update received will be passed to 'update_handler'
 client.add_update_handler(update_handler)
