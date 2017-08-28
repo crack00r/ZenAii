@@ -103,6 +103,7 @@ def update_handler(d):
                     var = word
                     buy =  'buyit'
                     coincoin = var.replace('#', '')
+                    print(running)
                     while (running == 'running'):
                         varnothing = 'nothing'
                     else:
@@ -533,7 +534,8 @@ def sellsell():
     subprocess.call(process1,shell=True)
 
 # From now on, any update received will be passed to 'update_handler'
-client.add_update_handler(update_handler)
-input('Press <ENTER> to exit...')
-client.disconnect()
+while True:
+    client.add_update_handler(update_handler)
+    input('Press <ENTER> to exit...')
+    client.disconnect()
 
