@@ -284,6 +284,7 @@ class Chart(object):
 
 
 def runrun():
+    global running
     waitwait = 'notready'
     print('Waitwait set to False, running set to true before sell and waiting on macd up signal before sell.')
     while True:
@@ -378,7 +379,7 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'finished'
+                running = 'null'
                 break
             else:
                 print(word)
@@ -418,7 +419,7 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'finished'
+                running = 'null'
                 break
             else:
                 print(word)
@@ -458,7 +459,7 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'finished'
+                running = 'null'
                 break
             else:
                 print(word)
@@ -498,7 +499,7 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'finished'
+                running = 'null'
                 break
             else:
                 print(word)
