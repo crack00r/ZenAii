@@ -34,8 +34,6 @@ global sellstr
 global buystr
 global coincoin
 global coin
-global running
-running = 'null'
 print('Cryptoping Auto-Trader, with live updates...')
 print('Cryptoping Auto-Trader, with live updates...')
 print('Cryptoping Auto-Trader, with live updates...')
@@ -44,6 +42,7 @@ print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
 print('When testing, look for a small-digit number in the 1-10000 range appearing in the console or a buy/sell order')
+pid = 'coin.run'
 threads = []
 flag = "test"
 variable = "test"
@@ -74,7 +73,6 @@ def update_handler(d):
     global buystr
     global sellstr
     global sell
-    global running
     # On this example, we just show the update object itself
     d = str(d)
     #testChannel
@@ -103,12 +101,10 @@ def update_handler(d):
                     var = word
                     buy =  'buyit'
                     coincoin = var.replace('#', '')
-                    print(running)
-                    while (running == 'running'):
-                        varnothing = 'nothing'
+                    if (os.path.isfile(pid)):
+                        print('Waiting on current process to finish... If you experience errors, delete process.run')
                     else:
                         sell = 'notready'
-                        running = 'running'
                         m = multiprocessing.Process(target = runrun , args = ())
                         m.start()
                         client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
@@ -285,16 +281,15 @@ class Chart(object):
 
 
 def runrun():
-    global running
+    open(pid, 'w').close()
     waitwait = 'notready'
-    print('Waitwait set to False, running set to true before sell and waiting on macd up signal before sell.')
+    print('Running Process Created, if you get errors delete process.run')
     while True:
         global sellstr
         global buystr
         global coincoin
         global coin
         global flag
-        global running
         btcc='BTC_'
         coin= btcc + coincoin
         word=coin
@@ -380,7 +375,6 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'null'
                 break
             else:
                 print(word)
@@ -420,7 +414,6 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'null'
                 break
             else:
                 print(word)
@@ -460,7 +453,6 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'null'
                 break
             else:
                 print(word)
@@ -500,7 +492,6 @@ def runrun():
                 sellstr=ke8
                 print('Selling... MACD is on DOWN Signal for: ' + word)
                 sellsell()
-                running = 'null'
                 break
             else:
                 print(word)
@@ -508,8 +499,8 @@ def runrun():
                 print('Waiting for MACD UP Signal for: ' + word)
         else:
             print('Regex did not match any matches for m, m1 or deny and deny1')
-    running = 'null'
-    print('Done running loop, ready for another coin')
+    os.remove(pid)
+    print('Done running loop, process file deted. Waiting for another coin...')
 
 def buy():
     return multiprocessing.Process(target = buybuy , args = ())
