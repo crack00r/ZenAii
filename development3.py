@@ -283,6 +283,7 @@ class Chart(object):
 def runrun():
     open(pid, 'w').close()
     waitwait = 'notready'
+    readyup = 'notready'
     print('Running Process Created, if you get errors delete process.run')
     while True:
         global sellstr
@@ -367,8 +368,8 @@ def runrun():
             if (Decimal(diff4) > 0):
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
-                waitwait = 'ready'
-            if (Decimal(diff1) > 0):
+                readyup = 'ready'
+            if (Decimal(diff1) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
             elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
@@ -377,7 +378,7 @@ def runrun():
                 sellsell()
                 break
             else:
-                print('Waiting for MACD UP sell ready signal or HIST UP BUY Signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
         elif deny:
             float1=deny.group(1) + deny.group(2) + deny.group(3)
             float2=deny.group(4) + deny.group(5) + deny.group(6)
@@ -405,8 +406,8 @@ def runrun():
             if (Decimal(diff4) > 0):
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
-                waitwait = 'ready'
-            if (Decimal(diff1) > 0):
+                readyup = 'ready'
+            if (Decimal(diff1) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
             elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
@@ -415,7 +416,7 @@ def runrun():
                 sellsell()
                 break
             else:
-                print('Waiting for MACD UP sell ready signal or HIST UP BUY Signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
         elif deny1:
             float1=m.group(1)
             float2=m.group(2)
@@ -443,8 +444,8 @@ def runrun():
             if (Decimal(diff4) > 0):
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
-                waitwait = 'ready'
-            if (Decimal(diff1) > 0):
+                readyup = 'ready'
+            if (Decimal(diff1) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
             elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
@@ -453,7 +454,7 @@ def runrun():
                 sellsell()
                 break
             else:
-                print('Waiting for MACD UP sell ready signal or HIST UP BUY Signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
         elif m and m1:
             float1=m.group(1)
             float2=m.group(2)
@@ -481,8 +482,8 @@ def runrun():
             if (Decimal(diff4) > 0):
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
-                waitwait = 'ready'
-            if (Decimal(diff1) > 0):
+                readyup = 'ready'
+            if (Decimal(diff1) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
             elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
@@ -491,7 +492,7 @@ def runrun():
                 sellsell()
                 break
             else:
-                print('Waiting for MACD UP sell ready signal or HIST UP BUY Signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
         else:
             print('Regex did not match any matches for m, m1 or deny and deny1')
     os.remove(pid)
