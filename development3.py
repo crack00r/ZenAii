@@ -285,12 +285,175 @@ def runrun():
     waitwait = 'notready'
     readyup = 'notready'
     print('Running Process Created, if you get errors delete process.run')
+    print('Checking current MACD!!! Breaking if already positive!')
+    global sellstr
+    global buystr
+    global coincoin
+    global coin
+    global flag
+    btcc='BTC_'
+    coin= btcc + coincoin
+    word=coin
+    from poloniex import Poloniex
+    api = Poloniex(jsonNums=float)
+    df = Chart(api, word).dataFrame()
+    df.dropna(inplace=True)
+    data = (df.tail(2)[['macd']])
+    data1 = (df.tail(2)[['emasig']])
+    #Turn Data into a string
+    txt=str(data)
+    txt1=str(data1)
+    # search for floats in the returned data
+    re1='.*?'	# Non-greedy match on filler
+    re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+    re3='.*?'	# Non-greedy match on filler
+    re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+    rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
+    m = rg.search(txt)
+    re1='.*?'	# Non-greedy match on filler
+    re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+    re3='.*?'	# Non-greedy match on filler
+    re4='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+    rg = re.compile(re1+re2+re3+re4,re.IGNORECASE|re.DOTALL)
+    m1 = rg.search(txt1)
+    # Search for floats that are too small to trade decision on
+    re1='.*?'	# Non-greedy match on filler
+    re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+    re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
+    re4='([-+]\\d+)'	# Integer Number 1
+    re5='.*?'	# Non-greedy match on filler
+    re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+    re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
+    re8='([-+]\\d+)'	# Integer Number 2
+    rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
+    deny = rg.search(txt)
+    re1='.*?'	# Non-greedy match on filler
+    re2='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 1
+    re3='((?:[a-z][a-z0-9_]*))'	# Variable Name 1
+    re4='([-+]\\d+)'	# Integer Number 1
+    re5='.*?'	# Non-greedy match on filler
+    re6='([+-]?\\d*\\.\\d+)(?![-+0-9\\.])'	# Float 2
+    re7='((?:[a-z][a-z0-9_]*))'	# Variable Name 2
+    re8='([-+]\\d+)'	# Integer Number 2
+    rg = re.compile(re1+re2+re3+re4+re5+re6+re7+re8,re.IGNORECASE|re.DOTALL)
+    deny1 = rg.search(txt1)
+    # 4 if statements to decide what will happen...
+    print(data)
+    print(data1)
+    print(waitwait)
+    if deny and deny1:
+        float1=deny.group(1) + deny.group(2) + deny.group(3)
+        float2=deny.group(4) + deny.group(5) + deny.group(6)
+        float3 = float(float1)
+        float4 = float(float2)
+        float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
+        float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
+        float7 = float(float5)
+        float8 = float(float6)
+        print(float3, float4, float7, float8)
+        # Calculate the difference in the two numbers
+        diff = Decimal(float(float7 - float3))
+        diff1 = Decimal(float(float8 - float4))
+        diffstr = str(diff)
+        diffstr1 = str(diff1)
+        diff4 = (diff1 - diff)
+        diff4str=str(diff4)
+        print(diffstr1)
+        print('Buying ' + word + ' on error correction loop.')
+        ke1=coincoin.replace('BTC_', '')
+        ke3='-BTC'
+        ke8=ke1+ke3
+        buystr=ke8
+        # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
+        if (Decimal(diff1) > 0):
+            print('Macd is already positive.. skipping...')
+            os.remove(pid)
+            return
+    elif deny:
+        float1=deny.group(1) + deny.group(2) + deny.group(3)
+        float2=deny.group(4) + deny.group(5) + deny.group(6)
+        float3 = float(float1)
+        float4 = float(float2)
+        float5=m1.group(1)
+        float6=m1.group(2)
+        float7 = float(float5)
+        float8 = float(float6)
+        print(float3, float4, float7, float8)
+        # Calculate the difference in the two numbers
+        diff = Decimal(float(float7 - float3))
+        diff1 = Decimal(float(float8 - float4))
+        diffstr = str(diff)
+        diffstr1 = str(diff1)
+        diff4 = (diff1 - diff)
+        diff4str=str(diff4)
+        print(diffstr1)
+        print('Buying ' + word + ' on error correction loop.')
+        ke1=word.replace('BTC_', '')
+        ke3='-BTC'
+        ke8=ke1+ke3
+        buystr=ke8
+        # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
+        if (Decimal(diff1) > 0):
+            print('Macd is already positive.. skipping...')
+            os.remove(pid)
+            return
+    elif deny1:
+        float1=m.group(1)
+        float2=m.group(2)
+        float3 = float(float1)
+        float4 = float(float2)
+        float5=deny1.group(1) + deny1.group(2) + deny1.group(3)
+        float6=deny1.group(4) + deny1.group(5) + deny1.group(6)
+        float7 = float(float5)
+        float8 = float(float6)
+        print(float3, float4, float7, float8)
+        # Calculate the difference in the two numbers
+        diff = Decimal(float(float7 - float3))
+        diff1 = Decimal(float(float8 - float4))
+        diffstr = str(diff)
+        diffstr1 = str(diff1)
+        diff4 = (diff1 - diff)
+        diff4str=str(diff4)
+        print(diffstr1)
+        print('Buying ' + word + ' on error correction loop.')
+        ke1=word.replace('BTC_', '')
+        ke3='-BTC'
+        ke8=ke1+ke3
+        buystr=ke8
+        # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
+        if (Decimal(diff1) > 0):
+            print('Macd is already positive.. skipping...')
+            os.remove(pid)
+            return
+    elif m and m1:
+        float1=m.group(1)
+        float2=m.group(2)
+        float3 = float(float1)
+        float4 = float(float2)
+        float5=m1.group(1)
+        float6=m1.group(2)
+        float7 = float(float5)
+        float8 = float(float6)
+        print(float3, float4, float7, float8)
+        # Calculate the difference in the two numbers
+        diff = Decimal(float(float7 - float3))
+        diff1 = Decimal(float(float8 - float4))
+        diffstr = str(diff)
+        diffstr1 = str(diff1)
+        diff4 = (diff1 - diff)
+        diff4str=str(diff4)
+        print(diffstr1)
+        print('Buying ' + word + ' on error correction loop.')
+        ke1=word.replace('BTC_', '')
+        ke3='-BTC'
+        ke8=ke1+ke3
+        buystr=ke8
+        # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
+        if (Decimal(diff1) > 0):
+            print('Macd is already positive.. skipping...')
+            os.remove(pid)
+            return
     while True:
-        global sellstr
-        global buystr
-        global coincoin
-        global coin
-        global flag
         btcc='BTC_'
         coin= btcc + coincoin
         word=coin
@@ -365,20 +528,17 @@ def runrun():
             ke8=ke1+ke3
             buystr=ke8
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff4) > 0):
-                print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
+            if (Decimal(diff1) > 0):
+                print('Buying on MACD UP: ' + word)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
-                print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
-                waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
-                print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+            elif (Decimal(diff1) < 0) and (readyup == 'ready'):
+                print('Selling on ready and macd down signal: ' + word)
                 sellstr=ke8
                 sellsell()
                 break
             else:
-                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD UP signal for: '+ word)
         elif deny:
             float1=deny.group(1) + deny.group(2) + deny.group(3)
             float2=deny.group(4) + deny.group(5) + deny.group(6)
@@ -403,20 +563,17 @@ def runrun():
             ke8=ke1+ke3
             buystr=ke8
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff4) > 0):
-                print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
+            if (Decimal(diff1) > 0):
+                print('Buying on MACD UP: ' + word)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
-                print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
-                waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
-                print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+            elif (Decimal(diff1) < 0) and (readyup == 'ready'):
+                print('Selling on ready and macd down signal: ' + word)
                 sellstr=ke8
                 sellsell()
                 break
             else:
-                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD UP signal for: '+ word)
         elif deny1:
             float1=m.group(1)
             float2=m.group(2)
@@ -441,20 +598,17 @@ def runrun():
             ke8=ke1+ke3
             buystr=ke8
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff4) > 0):
-                print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
+            if (Decimal(diff1) > 0):
+                print('Buying on MACD UP: ' + word)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
-                print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
-                waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
-                print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+            elif (Decimal(diff1) < 0) and (readyup == 'ready'):
+                print('Selling on ready and macd down signal: ' + word)
                 sellstr=ke8
                 sellsell()
                 break
             else:
-                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD UP signal for: '+ word)
         elif m and m1:
             float1=m.group(1)
             float2=m.group(2)
@@ -479,22 +633,19 @@ def runrun():
             ke8=ke1+ke3
             buystr=ke8
             # HERE DIFF 4 IS HISTOGRAM SIGNAL ON UPTREND. DIFF 1 IS ACTUAL MACD SIGNAL
-            if (Decimal(diff4) > 0):
-                print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
+            if (Decimal(diff1) > 0):
+                print('Buying on MACD UP: ' + word)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
-                print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
-                waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
-                print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
+            elif (Decimal(diff1) < 0) and (readyup == 'ready'):
+                print('Selling on ready and macd down signal: ' + word)
                 sellstr=ke8
                 sellsell()
                 break
             else:
-                print('Waiting for MACD HIST up signal and macd UP signal for ready' + word + ' Current macd hist diff is: ' + diff4str)
+                print('Waiting for MACD UP signal for: '+ word)
         else:
-            print('Regex did not match any matches for m, m1 or deny and deny1')
+            print('Regex did not match any matches for m, m1 or deny, deny1')
     os.remove(pid)
     print('Done running loop, process file deted. Waiting for another coin...')
 
