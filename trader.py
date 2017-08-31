@@ -93,8 +93,8 @@ def runitt():
     process0='./zenbot.sh buy --buy_pct=20 --markup_pct=-5  poloniex.' + variablestr
     proc0 = subprocess.Popen(process0,shell=True)
     proc0.communicate()
-    print('Starting Profit Sell Of:' + variablestr + ' Sell 100 pct at 3.5pct markup or manually sell using poloniex web interface... You must do this manually')
-    process1='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=1.5  poloniex.' + variablestr
+    print('Starting Profit Sell Of:' + variablestr + ' Sell 100 pct at 8pct markup or manually sell using poloniex web interface... You must do this manually')
+    process1='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=8  poloniex.' + variablestr
     proc1 = subprocess.Popen(process1,shell=True)
 
 
