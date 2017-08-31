@@ -51,33 +51,7 @@ Originally for zenaii:
 ```
 
 sudo apt update
-sudo apt install python-setuptools python3 python3-pip mongodb libcurl4-openssl-dev libssl-dev dialog jq curl python-pyaes
-sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
-sudo apt-get install -y nodejs
-sudo dpkg --configure -a
-sudo apt install -f
-sudo pip3 install pycurl
-sudo pip3 install pyyaml
-sudo pip3 install pyparse
-sudo pip3 install parse
-sudo pip3 install pyaes
-sudo python3 setup.py gen_tl
-sudo python3 setup.py install
-sudo npm install
-sudo npm link
-
-echo "First, Create a telegram account... For more info read the README.md and README2.md"
-echo "...And Then... Go here and get an API key and hash under Dev Tools: https://my.telegram.org/auth"
-echo "...And Then... Input your hash and key and phone into trader.py..."
-echo "then input your poloniex (preferred) Key and hash into conf-example.js"
-echo "...And Then... sudo python3 trader.py"
-```
-
-Originally for ZenMacd (most of the python-poloniex stuff):
-```
-
-sudo apt update
-sudo apt install python-setuptools python3 python3-pip mongodb libcurl4-openssl-dev libssl-dev dialog jq curl python-pyaes build-essential
+sudo apt install python3-setuptools python3 python3-pip mongodb libcurl4-openssl-dev libssl-dev dialog jq curl build-essential
 sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo dpkg --configure -a
@@ -89,15 +63,50 @@ sudo pip3 install parse
 sudo pip3 install pyaes
 sudo pip3 install pandas
 sudo pip3 install pymongo
+sudo python3 setup.py gen_tl
 sudo python3 setup.py install
 sudo npm install
 sudo npm link
+
+echo "First, Create a telegram account... For more info read the README.md and README2.md"
+echo "...And Then... Go here and get an API key and hash under Dev Tools: https://my.telegram.org/auth"
+echo "...And Then... Input your hash, key, and phone into trader.py..."
+echo "then input your poloniex (preferred) Key and hash into conf-example.js"
+echo "...Then git clone this: https://github.com/TheRoboKitten/python-poloniex.git"
+echo "...move everything inside that folder into the zenaii directory"
+echo "Then run sudo python3 setup.py install"
+
 
 ```
 
 
 
 Make sure to input your poloniex API KEY and HASH into conf-example.js
+
+Then git clone this: 
+```
+https://github.com/TheRoboKitten/python-poloniex.git /python-poloniex
+```
+In zenaii directory, mv setup.py setup1.py out of the way.
+
+```
+mv setup.py setup1.py
+```
+
+Then cd into /python-poloniex
+Then do:
+```
+cd /python-poloniex
+sudo cp * /zenaii/ -rf
+```
+
+Then do:
+
+```
+sudo python3 setup.py install
+```
+
+THEN DO THE INSTRUCTIONS BELOW, THEY MIGHT BE OUT OF ORDER!
 
 Read below for setting up telethon.
 
@@ -147,17 +156,19 @@ To run the explorer after inputting your phone and API ID/Key:
 
 
 
-## Donate
-
-P.S., some have asked for how to donate to Zenbot development. I accept donations at **my Bitcoin address** Here:
-
-### carlos8f's BTC
+### carlos8f's BTC, Zenbot License
 
 `187rmNSkSvehgcKpBunre6a5wA5hQQop6W`
 
 ![zenbot logo](https://rawgit.com/carlos8f/zenbot/master/assets/zenbot_square.png)
 
 Thanks!
+
+### Zenaii Development BTC:
+
+`1Ppitsjie6EcRTpfJEXmEYzUaoJgBdvhAg`
+
+THANK YOU!!!
 
 - - -
 
