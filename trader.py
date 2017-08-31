@@ -90,7 +90,7 @@ def runitt():
     variable=str(variable)
     variablestr=str(variable)
     print('Starting Buy Of:' + variablestr + 'And will wait until 25pct bought')
-    process0='./zenbot.sh buy --buy_pct=20 --markup_pct=-5  poloniex.' + variablestr
+    process0='./zenbot.sh buy --order_adjust_time=1000000000 --buy_pct=20 --markup_pct=-5  poloniex.' + variablestr
     proc0 = subprocess.Popen(process0,shell=True)
     proc0.communicate()
     print('Starting Profit Sell Of:' + variablestr + ' Sell 100 pct at 8pct markup or manually sell using poloniex web interface... You must do this manually')
