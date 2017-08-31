@@ -51,7 +51,7 @@ Originally for zenaii:
 ```
 
 sudo apt update
-sudo apt install python3-setuptools python3 python3-pip mongodb libcurl4-openssl-dev libssl-dev dialog jq curl build-essential
+sudo apt install python3-setuptools python3 python3-pip mongodb libcurl4-openssl-dev libssl-dev dialog jq curl build-essential node-gyp
 sudo curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo dpkg --configure -a
@@ -75,7 +75,6 @@ echo "then input your poloniex (preferred) Key and hash into conf-example.js"
 echo "...Then git clone this: https://github.com/TheRoboKitten/python-poloniex.git"
 echo "...move everything inside that folder into the zenaii directory"
 echo "Then run sudo python3 setup.py install"
-
 
 ```
 
