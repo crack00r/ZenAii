@@ -96,8 +96,15 @@ def runitt():
     print('Starting Profit Sell Of:' + variablestr + ' Sell 100 pct at 8pct markup or manually sell using poloniex web interface... You must do this manually')
     process1='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=6  poloniex.' + variablestr
     proc1 = subprocess.Popen(process1,shell=True)
-
-
+    proc1.communicate()
+    print('Starting 2pct markup Sell Of:' + variablestr + ' In Case of Error')
+    process2='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=2  poloniex.' + variablestr
+    proc2 = subprocess.Popen(process2,shell=True)
+    proc2.communicate()
+    print('Starting Error Sell Of:' + variablestr + ' In Case of Error')
+    process3='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=0  poloniex.' + variablestr
+    proc3 = subprocess.Popen(process3,shell=True)
+    proc3.communicate()
 
 # From now on, any update received will be passed to 'update_handler'
 client.add_update_handler(update_handler)
