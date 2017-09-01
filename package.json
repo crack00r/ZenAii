@@ -40,7 +40,8 @@
     "timebucket": "^0.4.0",
     "talib": "^1.0.3",
     "zero-fill": "^2.2.3",
-    "graceful-fs": "^4.1.11"
+    "graceful-fs": "^4.1.11",
+    "forex.analytics": "^0.0.14"
   },
   "devDependencies": {
     "eslint": "^4.0.0"
