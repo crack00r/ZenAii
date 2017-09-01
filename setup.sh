@@ -25,3 +25,5 @@ echo "...Then git clone this: https://github.com/TheRoboKitten/python-poloniex.g
 echo "...move everything inside that folder into the zenaii directory"
 echo "Then run sudo python3 setup.py install"
 
+echo "If you get errors with forex.analytics module, do su... then install sudo npm install forex.analytics"
+
