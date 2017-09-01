@@ -40,8 +40,7 @@
     "sosa_mongo": "^1.0.3",
     "timebucket": "^0.4.0",
     "talib": "^1.0.3",
-    "zero-fill": "^2.2.3",
-    "forex.analytics": "^0.0.14"
+    "zero-fill": "^2.2.3"
   },
   "devDependencies": {
     "eslint": "^4.0.0"
