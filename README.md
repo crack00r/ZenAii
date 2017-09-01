@@ -24,24 +24,12 @@
 Run in your console,
 
 ```
-git clone https://github.com/TheRoboKitten/zenaii.git
+git clone https://github.com/TheRoboKitten/zenaii.git /zenaii
 ```
 
 Then run:
 ```
 sudo sh setup.sh
-```
-Then, Git clone this:
-```
-git clone https://github.com/s4w3d0ff/python-poloniex.git
-```
-Copy everything inside python-poloniex into the /Zenaii Directory, you can rename setup.py if you wish.
-```
-cp python-poloniex/* ZenAii/* -R
-```
-Install python-poloniex:
-```
-sudo python3 setup.py install
 ```
 
 
