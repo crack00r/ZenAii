@@ -17,7 +17,7 @@
 
 ## Quick-start
 
-### 1. Requirements: Windows, Linux or OSX or Docker, [Node.js](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/) and Python3.
+### 1. Requirements: Preferred running in screen on google cloud compute UBUNTU XENIAL instance, [Node.js](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/) and Python3.
 
 ### 2. Install zenbot 4:
 
