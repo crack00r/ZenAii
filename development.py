@@ -506,7 +506,7 @@ def buybuy():
     variable=str(buystr)
     variablestr=str(variable)
     print('Starting BUY Of: ' + variablestr + ' Buying and waiting for macd HIST UP buy signal to allow macd sell.')
-    process1='./zenbot.sh buy --order_adjust_time=20000 --markup_pct=-0.1  poloniex.' + variablestr	
+    process1='./zenbot.sh buy --order_adjust_time=20000000000000 --markup_pct=-0.1  poloniex.' + variablestr	
     subprocess.call(process1,shell=True)
 
 def sell():
@@ -517,7 +517,7 @@ def sellsell():
     variable=str(sellstr)
     variablestr=str(variable)
     print('Starting SELL Of: ' + variablestr + 'Selling on macd sell signal. Lines have crossed!!!')
-    process1='./zenbot.sh sell --order_adjust_time=20000 --markup_pct=-0.1 --debug  poloniex.' + variablestr	
+    process1='./zenbot.sh sell --order_adjust_time=20000000000000 --markup_pct=-0.1 --debug  poloniex.' + variablestr	
     subprocess.call(process1,shell=True)
 
 # From now on, any update received will be passed to 'update_handler'
