@@ -369,10 +369,10 @@ def runrun():
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
+            if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
@@ -407,10 +407,10 @@ def runrun():
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
+            if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
@@ -445,10 +445,10 @@ def runrun():
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
+            if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
@@ -483,10 +483,10 @@ def runrun():
                 print('Buying on HIST UP: ' + word + ' Current macd hist diff is: ' + diff4str)
                 buybuy()
                 readyup = 'ready'
-            if (Decimal(diff1) > 0) and (readyup == 'ready'):
+            if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
@@ -506,7 +506,7 @@ def buybuy():
     variable=str(buystr)
     variablestr=str(variable)
     print('Starting BUY Of: ' + variablestr + ' Buying and waiting for macd HIST UP buy signal to allow macd sell.')
-    process1='./zenbot.sh buy --order_adjust_time=20000 --debug  poloniex.' + variablestr	
+    process1='./zenbot.sh buy --order_adjust_time=20000 --markup_pct=-0.1  poloniex.' + variablestr	
     subprocess.call(process1,shell=True)
 
 def sell():
@@ -517,7 +517,7 @@ def sellsell():
     variable=str(sellstr)
     variablestr=str(variable)
     print('Starting SELL Of: ' + variablestr + 'Selling on macd sell signal. Lines have crossed!!!')
-    process1='./zenbot.sh sell --order_adjust_time=20000 --markup_pct=0 --debug  poloniex.' + variablestr	
+    process1='./zenbot.sh sell --order_adjust_time=20000 --markup_pct=-0.1 --debug  poloniex.' + variablestr	
     subprocess.call(process1,shell=True)
 
 # From now on, any update received will be passed to 'update_handler'
