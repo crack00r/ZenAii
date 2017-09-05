@@ -372,7 +372,7 @@ def runrun():
             if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
@@ -410,7 +410,7 @@ def runrun():
             if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
@@ -448,7 +448,7 @@ def runrun():
             if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
@@ -486,7 +486,7 @@ def runrun():
             if (Decimal(diff4) > 0) and (readyup == 'ready'):
                 print('Setting MACD UP ready signal to sell: ' + word + ' Current macd hist diff is: ' + diff4str)
                 waitwait = 'ready'
-            elif (Decimal(diff4) < 0) and (waitwait == 'ready'):
+            elif (Decimal(diff1) < 0) and (waitwait == 'ready'):
                 print('Selling on ready and macd down signal: ' + word + ' Current macd hist diff is: ' + diff4str)
                 sellstr=ke8
                 sellsell()
