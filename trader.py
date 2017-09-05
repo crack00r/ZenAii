@@ -14,9 +14,9 @@ from decimal import *
 global flag
 global variable
 
-print('Cryptoping Auto-Trader, with live updates...')
-print('Cryptoping Auto-Trader, with live updates...')
-print('Cryptoping Auto-Trader, with live updates...')
+print('CryptoAlert Auto-Trader, with live updates...')
+print('CryptoAlert Auto-Trader, with live updates...')
+print('CryptoAlert Auto-Trader, with live updates...')
 print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('CTRL-C To exit')
