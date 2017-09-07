@@ -31,7 +31,7 @@ api_hash = '75b1fbdede4c49f7b7ca4a8681d5dfdf'
 client = TelegramClient('session_id', api_id, api_hash)
 client.connect()
 
-
+# PUT YOUR PHONE NUMBER ASSICOATED WITH TELEGRAM BELOW google voice works...
 if not client.is_user_authorized():
   client.send_code_request('+14698447320')
   client.sign_in('+14698447320', input('Enter code: '))
