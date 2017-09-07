@@ -21,7 +21,7 @@ print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('CTRL-C To exit')
 print('To test me, type a coin into the cryptoping telegram bot window on telegram such as #LTC and #DASH')
-
+print('The Telegram updates in a while loop, and creates a pid equialent... delete coin.run if exiting in the middle of a sell signal')
 threads = []
 flag = "test"
 variable = "test"
