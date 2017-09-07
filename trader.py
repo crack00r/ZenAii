@@ -80,7 +80,7 @@ def update_handler(d):
                         print('Waiting on current process to finish... If you experience errors, delete process.run')
                     else:
                         sell = 'notready'
-                        m = multiprocessing.Process(target = runrun , args = ())
+                        m = multiprocessing.Process(target = runitt , args = ())
                         m.start()
                         client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
                 except Exception as e:
