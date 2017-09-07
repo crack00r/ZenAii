@@ -13,7 +13,7 @@ from decimal import *
 
 global flag
 global variable
-
+pid = 'coin.run'
 print('CryptoAlert Auto-Trader, with live updates...')
 print('CryptoAlert Auto-Trader, with live updates...')
 print('CryptoAlert Auto-Trader, with live updates...')
@@ -76,9 +76,13 @@ def update_handler(d):
                     var1 = var.replace('#', '')
                     btc = '-BTC'
                     variable = var1 + btc
-                    m = create_process()
-                    m.start()
-                    client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
+                    if (os.path.isfile(pid)):
+                        print('Waiting on current process to finish... If you experience errors, delete process.run')
+                    else:
+                        sell = 'notready'
+                        m = multiprocessing.Process(target = runrun , args = ())
+                        m.start()
+                        client(ForwardMessageRequest(peer=peer1, id=(idd), random_id=(generate_random_long())))
                 except Exception as e:
                     print(e)
 
@@ -86,11 +90,12 @@ def create_process():
     return multiprocessing.Process(target = runitt , args = ())
  
 def runitt():
+    open(pid, 'w').close()
     global variable
     variable=str(variable)
     variablestr=str(variable)
     print('Starting Buy Of:' + variablestr + 'And will wait until 50pct balance bought.')
-    process0='./zenbot.sh buy --order_adjust_time=1000000000 --buy_pct=50 --markup_pct=-1  poloniex.' + variablestr
+    process0='./zenbot.sh buy --order_adjust_time=1000000000 --buy_pct=50 --markup_pct=0  poloniex.' + variablestr
     proc0 = subprocess.Popen(process0,shell=True)
     proc0.communicate()
     print('Starting Profit Sell Of:' + variablestr + ' Sell 100 pct at 2pct markup or manually sell using poloniex web interface... You must do this manually')
@@ -98,14 +103,15 @@ def runitt():
     proc1 = subprocess.Popen(process1,shell=True)
     proc1.communicate()
     print('Starting 2pct markup error sell Of:' + variablestr + ' In Case of Error')
-    process2='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=2  poloniex.' + variablestr
+    process2='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=0  poloniex.' + variablestr
     proc2 = subprocess.Popen(process2,shell=True)
     proc2.communicate()
     print('Starting Error Sell Of:' + variablestr + ' In Case of Error')
     process3='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=0  poloniex.' + variablestr
     proc3 = subprocess.Popen(process3,shell=True)
     proc3.communicate()
-
+    os.remove(pid)
+    print('Done running loop, process file deted. Waiting for another coin...')
 # From now on, any update received will be passed to 'update_handler' NOTE... Later, Zenbot will be modified to cancel on order adjust.
 client.add_update_handler(update_handler)
 
