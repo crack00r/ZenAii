@@ -113,10 +113,10 @@ def runitt():
     os.remove(pid)
     print('Done running loop, process file deted. Waiting for another coin...')
 # From now on, any update received will be passed to 'update_handler' NOTE... Later, Zenbot will be modified to cancel on order adjust.
-client.add_update_handler(update_handler)
-
-input('Press <ENTER> to exit...')
-client.disconnect()
+while True:
+    client.add_update_handler(update_handler)
+    input('Press <ENTER> to exit...')
+    client.disconnect()
 
 
 
