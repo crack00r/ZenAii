@@ -70,28 +70,6 @@ echo "Then run sudo python3 setup.py install"
 
 Make sure to input your poloniex API KEY and HASH into conf-example.js
 
-Then git clone this: 
-```
-https://github.com/TheRoboKitten/python-poloniex.git /python-poloniex
-```
-In zenaii directory, mv setup.py setup1.py out of the way.
-
-```
-mv setup.py setup1.py
-```
-
-Then cd into /python-poloniex
-Then do:
-```
-cd /python-poloniex
-sudo cp * /zenaii/ -rf
-```
-
-Then do:
-
-```
-sudo python3 setup.py install
-```
 
 THEN DO THE INSTRUCTIONS BELOW, THEY MIGHT BE OUT OF ORDER!
 
