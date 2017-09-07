@@ -111,7 +111,7 @@ def runitt():
     proc3 = subprocess.Popen(process3,shell=True)
     proc3.communicate()
     os.remove(pid)
-    print('Done running loop, process file deted. Waiting for another coin...')
+    print('Done running loop, process file deleted. Waiting for another coin...')
 # From now on, any update received will be passed to 'update_handler' NOTE... Later, Zenbot will be modified to cancel on order adjust.
 while True:
     client.add_update_handler(update_handler)
