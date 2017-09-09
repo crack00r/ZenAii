@@ -98,7 +98,7 @@ def runitt():
     process0='./zenbot.sh trade poloniex.' + variablestr
     subprocess.Popen(process0,shell=True)
     time.Sleep(1800)
-    print('Starting node kill process)
+    print('Starting node kill process')
     process1='sudo killall node'
     subprocess.Call(process1,shell=True)
 
