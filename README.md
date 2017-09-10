@@ -117,6 +117,12 @@ Running CryptoAlert ZenAII
 If you've installed Telethon:
 To run the explorer after inputting your phone and API ID/Key:
    ``sudo python3 trader.py``
+   
+   
+   Note to self:
+   ```
+   zenbot trade gdax.BTC-EUR  --max_slippage_pct=5 --order_adjust_time=5750 --trend_ema=13 --neutral_rate=0 --oversold_rsi_periods=25 --oversold_rsi=11 --max_sell_loss_pct=0 --avg_slippage_pct=0.1 --buy_pct=50 --sell_pct=90 --currency_capital=100 --paper
+   ```
   
 
 
