@@ -99,7 +99,7 @@ def runitt():
     subprocess.Popen(process0,shell=True)
     time.sleep(3600)
     print('Starting node kill process')
-    process1='sudo killall node'
+    process1='sudo pkill node'
     subprocess.Popen(process1,shell=True)
     print('Starting final sell Of:' + variablestr + ' In Case of Error')
     process2='./zenbot.sh sell --order_adjust_time=1000000000 --sell_pct=100 --markup_pct=0  poloniex.' + variablestr
