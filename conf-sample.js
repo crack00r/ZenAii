@@ -102,9 +102,9 @@ c.buy_pct = 100
 // sell with this % of asset balance (WARNING : sim won't work properly if you set this value to 100)
 c.sell_pct = 100
 // ms to adjust non-filled order after
-c.order_adjust_time = 2000000000000000000000
-// avoid selling at a loss below this pct
-c.max_sell_loss_pct = 5
+c.order_adjust_time = 5750
+// avoid selling at a loss below this pct.. I set this to 0 based on other paper tests that have worked. Default 25
+c.max_sell_loss_pct = 0
 // ms to poll order status
 c.order_poll_time = 5000
 // ms to wait for settlement (after an order cancel)
@@ -132,7 +132,7 @@ c.rsi_periods = 14
 // period to record balances for stats
 c.balance_snapshot_period = '15m'
 // avg. amount of slippage to apply to sim trades
-c.avg_slippage_pct = 0.045
+c.avg_slippage_pct = 0.1
 
 //xmpp configs
 
