@@ -95,7 +95,7 @@ def runitt():
     variable=str(variable)
     variablestr=str(variable)
     print('Starting Trade of: ' + variablestr)
-    process0='./zenbot.sh trade --max_slippage_pct=5 --order_adjust_time=5750 --max_sell_loss_pct=0 --avg_slippage_pct=0.1 poloniex.' + variablestr
+    process0='./zenbot.sh trade --period=1m --max_slippage_pct=5 --order_adjust_time=5750 --max_sell_loss_pct=0 --avg_slippage_pct=0.1 poloniex.' + variablestr
     subprocess.Popen(process0,shell=True)
     time.sleep(3600)
     print('Starting node kill process')
